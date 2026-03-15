@@ -10,16 +10,12 @@
   --bg-card: #11121a;
   --bg-chat: #0c0d14;
   --accent: #6366f1;
-  --accent-soft: rgba(99, 102, 241, 0.15);
   --accent-strong: #4f46e5;
   --text-main: #f3f4f6;
   --text-muted: #9ca3af;
   --border-subtle: rgba(148, 163, 184, 0.25);
   --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
-  --radius-lg: 18px;
-  --radius-md: 12px;
   --radius-pill: 999px;
-  --transition-fast: 0.18s ease-out;
   --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
 }
 
@@ -28,23 +24,28 @@ body {
   background: radial-gradient(circle at top, #1e1b4b 0, #0a0a0f 60%);
   color: var(--text-main);
   font-family: var(--font-main);
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* WRAPPER */
+/* PAGE WRAPPER */
 .page-wrapper {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 24px 16px 40px;
+  padding: 20px 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* HEADER */
 .header {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(79, 70, 229, 0.25));
-  border-radius: 24px;
+  border-radius: 20px;
   padding: 20px;
   border: 1px solid rgba(148, 163, 184, 0.35);
   box-shadow: var(--shadow-soft);
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .logo-title {
@@ -76,95 +77,126 @@ body {
 
 /* ADS */
 .ad-section {
-  margin: 16px 0;
+  margin-bottom: 14px;
   padding: 10px 0;
   background: rgba(99, 102, 241, 0.08);
   border-radius: 16px;
 }
 
-.ad-side {
-  margin-top: 18px;
-}
-
-/* LAYOUT */
-.main-layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 18px;
-}
-
-@media (max-width: 900px) {
-  .main-layout {
-    grid-template-columns: 1fr;
-  }
+/* FULLSCREEN CHAT */
+.chat-fullscreen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 /* CHAT CARD */
 .chat-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
   background: var(--bg-card);
-  border-radius: 22px;
+  border-radius: 20px;
   padding: 16px;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid rgba(148, 163, 184, 0.35);
   box-shadow: var(--shadow-soft);
+
+  min-height: 0;
 }
 
+/* CHAT BOX */
 .chat-box {
+  flex: 1;
+  overflow-y: auto;
+
   background: var(--bg-chat);
   border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  padding: 12px;
-  height: 360px;
-  overflow-y: auto;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+
+  padding: 20px;
+  margin-bottom: 14px;
+
+  font-size: 1.1rem;
+  line-height: 1.7;
+  letter-spacing: 0.2px;
+
+  max-width: 900px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* SCROLLBAR */
+.chat-box::-webkit-scrollbar {
+  width: 8px;
+}
+.chat-box::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.7);
+  border-radius: 999px;
+}
+
+/* CHAT BUBBLES */
+.message {
+  margin-bottom: 16px;
+  display: flex;
+}
+
+.message .bubble {
+  padding: 14px 18px;
+  border-radius: 14px;
+  max-width: 100%;
+}
+
+/* USER */
+.message.user {
+  justify-content: flex-end;
+}
+.message.user .bubble {
+  background: rgba(99, 102, 241, 0.25);
+  border: 1px solid rgba(129, 140, 248, 0.6);
+}
+
+/* BOT */
+.message.assistant {
+  justify-content: flex-start;
+}
+.message.assistant .bubble {
+  background: #141726;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  color: #e5e7eb;
 }
 
 /* INPUT */
 .input-row {
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 10px;
 }
 
 .input-row input {
   flex: 1;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.9);
-  color: var(--text-main);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: #0d1020;
+  color: white;
+  font-size: 1rem;
 }
 
 .input-row button {
-  padding: 0 16px;
+  padding: 0 20px;
   border-radius: var(--radius-pill);
-  border: none;
   background: var(--accent-strong);
+  border: none;
   color: white;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45);
-}
-
-/* INFO CARD */
-.info-card {
-  background: var(--bg-card);
-  border-radius: 20px;
-  padding: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  box-shadow: var(--shadow-soft);
-}
-
-.info-card ul {
-  padding-left: 0;
-  list-style: none;
-}
-
-.info-card li {
-  margin-bottom: 6px;
 }
 
 /* FOOTER */
 .footer {
-  margin-top: 24px;
+  margin-top: 16px;
   text-align: center;
   color: var(--text-muted);
   font-size: 0.85rem;
