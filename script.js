@@ -6,7 +6,7 @@ async function sendMessage() {
 
   chatBox.innerHTML += `<p class="user">Du: ${msg}</p>`;
 
-  const res = await fetch("https://DEIN-RENDER-URL.onrender.com/chat", {
+  const res = await fetch("https://eduai-sos2L.onrender.com/chat", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ message: msg })
