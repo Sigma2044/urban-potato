@@ -2,19 +2,8 @@ const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("msg");
 const imageInput = document.getElementById("imageInput");
 
-// HIER DEINE RENDER URL EINTRAGEN
-const API_BASE = "https://eduai-5b85.onrender.com";
-
-let mode = "chat"; // chat | generate
-
-function setMode(newMode) {
-  mode = newMode;
-  addMessage("assistant", 
-    newMode === "chat"
-      ? "Modus: Chat aktiviert."
-      : "Modus: Bildgenerierung aktiviert."
-  );
-}
+// Deine Render Backend URL
+const API_BASE = "https://eduai.5b85.onrender.com";
 
 /* -------------------------
    SENDEN
@@ -26,12 +15,11 @@ async function sendMessage() {
   addMessage("user", msg);
   input.value = "";
 
-  if (mode === "chat") sendText(msg);
-  if (mode === "generate") generateImage(msg);
+  sendText(msg);
 }
 
 /* -------------------------
-   CHAT (mistral-small)
+   CHAT
 -------------------------- */
 async function sendText(msg) {
   const loading = addLoading();
@@ -46,14 +34,15 @@ async function sendText(msg) {
     const data = await res.json();
     removeLoading(loading);
     addMessage("assistant", data.reply);
+
   } catch {
     removeLoading(loading);
-    addMessage("assistant", "Fehler beim Chat‑Request.");
+    addMessage("assistant", "❌ Fehler beim Chat‑Request.");
   }
 }
 
 /* -------------------------
-   AUTO-VISION (Pixtral Vision)
+   AUTO-VISION
 -------------------------- */
 imageInput.addEventListener("change", async () => {
   const file = imageInput.files[0];
@@ -75,48 +64,19 @@ imageInput.addEventListener("change", async () => {
     const data = await res.json();
     removeLoading(loading);
     addMessage("assistant", data.reply);
+
   } catch {
     removeLoading(loading);
-    addMessage("assistant", "Fehler bei der Bildanalyse.");
+    addMessage("assistant", "❌ Fehler bei der Bildanalyse.");
   }
 });
-
-/* -------------------------
-   BILDGENERIERUNG (Pixtral Image)
--------------------------- */
-async function generateImage(prompt) {
-  const loading = addLoading();
-
-  try {
-    const res = await fetch(`${API_BASE}/generate`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt })
-    });
-
-    const data = await res.json();
-    removeLoading(loading);
-
-    addMessage("assistant", "🖼️ Bild generiert:");
-
-    const img = document.createElement("img");
-    img.src = data.url;
-    img.className = "generated-img fade-in";
-    chatBox.appendChild(img);
-
-    scrollDown();
-  } catch {
-    removeLoading(loading);
-    addMessage("assistant", "Fehler bei der Bildgenerierung.");
-  }
-}
 
 /* -------------------------
    UI FUNKTIONEN
 -------------------------- */
 function addMessage(role, text) {
   const msg = document.createElement("div");
-  msg.className = `message ${role} fade-in`;
+  msg.className = `message ${role}`;
   msg.innerHTML = `<div class="bubble">${escapeHTML(text)}</div>`;
   chatBox.appendChild(msg);
   scrollDown();
