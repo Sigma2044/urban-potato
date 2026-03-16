@@ -3,100 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>EduAI – Dein smarter KI‑Chatbot</title>
-  <meta name="description" content="EduAI beantwortet deine Fragen sofort – schnell, intelligent und kostenlos.">
-
+  <title>EduAI – Smarter KI‑Chat</title>
+  <meta name="description" content="EduAI beantwortet deine Fragen und analysiert Bilder mit KI.">
   <link rel="stylesheet" href="style.css">
-
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9858751801616084"
-     crossorigin="anonymous"></script>
 </head>
-
 <body>
   <div class="page-wrapper">
 
-    <!-- HEADER -->
     <header class="header">
       <div class="logo-title">
         <img src="logo.png" class="logo-img" alt="EduAI Logo">
         <div>
           <h1>EduAI</h1>
-          <p class="subtitle">Der schnelle, smarte KI‑Chatbot</p>
+          <p class="subtitle">Chat & Bildanalyse mit KI</p>
         </div>
       </div>
       <p class="header-text">
-        Stelle jede Frage – EduAI antwortet sofort. Einfach, schnell und kostenlos.
+        Stelle Fragen im Chat oder lade ein Bild hoch – EduAI erklärt dir, was zu sehen ist.
       </p>
     </header>
 
-    <!-- TOP AD -->
-    <section class="ad-section">
-      <ins class="adsbygoogle"
-          style="display:block"
-          data-ad-client="ca-pub-9858751801616084"
-          data-ad-slot="7488585387"
-          data-ad-format="auto"
-          data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </section>
-
-    <!-- 2-SPALTEN LAYOUT -->
     <main class="layout">
-
-      <!-- SEITENLEISTE -->
+      <!-- Sidebar -->
       <aside class="sidebar">
-
-        <h3>Modus</h3>
-        <div class="mode-select">
-          <button onclick="setMode('chat')">Chat</button>
-          <button onclick="setMode('generate')">Bild generieren</button>
-        </div>
-
         <h3>Bildanalyse</h3>
-        <p class="hint">Wähle ein Bild aus – Analyse startet automatisch.</p>
-
+        <p class="hint">Wähle ein Bild aus – die Analyse startet automatisch.</p>
         <input type="file" id="imageInput" accept="image/*" class="upload-input">
 
         <h3>Was kann EduAI?</h3>
-        <ul>
-          <li> Schulwissen & Erklärungen</li>
-          <li> Ideen, Tipps, Zusammenfassungen</li>
-          <li> Allgemeinwissen</li>
-          <li> Technik, Coding, Mathe</li>
+        <ul class="feature-list">
+          <li>Schulfragen & Erklärungen</li>
+          <li>Allgemeinwissen & Zusammenfassungen</li>
+          <li>Bildinhalte erklären</li>
+          <li>Technik & Coding‑Fragen</li>
         </ul>
-
       </aside>
 
-      <!-- CHATBEREICH -->
+      <!-- Chat -->
       <section class="chat-card">
-
         <div id="chat-box" class="chat-box"></div>
 
         <div class="input-row">
           <input id="msg" placeholder="Frag EduAI etwas…">
           <button onclick="sendMessage()">Senden</button>
         </div>
-
       </section>
-
     </main>
 
-    <!-- BOTTOM AD -->
-    <section class="ad-section ad-bottom">
-      <ins class="adsbygoogle"
-          style="display:block"
-          data-ad-client="ca-pub-9858751801616084"
-          data-ad-slot="7488585387"
-          data-ad-format="auto"
-          data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </section>
-
-    <!-- FOOTER -->
     <footer class="footer">
-      <p>© 2026 EduAI – Smarter KI‑Chatbot</p>
+      <p>© 2026 EduAI – Smarter KI‑Chat</p>
     </footer>
 
   </div>
