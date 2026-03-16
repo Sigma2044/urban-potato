@@ -42,29 +42,42 @@
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </section>
 
-    <!-- CHAT FULLSCREEN -->
-    <main class="chat-fullscreen">
+    <!-- 2-SPALTEN LAYOUT -->
+    <main class="layout">
 
-      <section class="chat-card">
+      <!-- SEITENLEISTE -->
+      <aside class="sidebar">
 
-        <!-- MODUS AUSWAHL -->
+        <h3>Modus</h3>
         <div class="mode-select">
           <button onclick="setMode('chat')">Chat</button>
-          <button onclick="setMode('vision')">Bild analysieren</button>
-          <button onclick="setMode('generate')"> Bild generieren</button>
+          <button onclick="setMode('generate')">Bild generieren</button>
         </div>
 
-        <!-- CHATBOX -->
+        <h3>Bildanalyse</h3>
+        <p class="hint">Wähle ein Bild aus – Analyse startet automatisch.</p>
+
+        <input type="file" id="imageInput" accept="image/*" class="upload-input">
+
+        <h3>Was kann EduAI?</h3>
+        <ul>
+          <li> Schulwissen & Erklärungen</li>
+          <li> Ideen, Tipps, Zusammenfassungen</li>
+          <li> Allgemeinwissen</li>
+          <li> Technik, Coding, Mathe</li>
+        </ul>
+
+      </aside>
+
+      <!-- CHATBEREICH -->
+      <section class="chat-card">
+
         <div id="chat-box" class="chat-box"></div>
 
-        <!-- TEXT INPUT -->
         <div class="input-row">
           <input id="msg" placeholder="Frag EduAI etwas…">
           <button onclick="sendMessage()">Senden</button>
         </div>
-
-        <!-- BILD UPLOAD (für Vision) -->
-        <input type="file" id="imageInput" accept="image/*" class="upload-input">
 
       </section>
 
