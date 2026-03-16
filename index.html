@@ -3,56 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduAI – Smarter KI‑Chat</title>
-  <meta name="description" content="EduAI beantwortet deine Fragen und analysiert Bilder mit KI.">
+  <title>EduAI – Glass Chat</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page-wrapper">
 
-    <header class="header">
-      <div class="logo-title">
-        <img src="logo.png" class="logo-img" alt="EduAI Logo">
-        <div>
-          <h1>EduAI</h1>
-          <p class="subtitle">Chat & Bildanalyse mit KI</p>
-        </div>
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar glass">
+      <h2 class="logo">EduAI</h2>
+      <p class="side-desc">Chat & Bildanalyse</p>
+
+      <div class="upload-box glass">
+        <p>📷 Bild auswählen</p>
+        <input type="file" id="imageInput" accept="image/*">
       </div>
-      <p class="header-text">
-        Stelle Fragen im Chat oder lade ein Bild hoch – EduAI erklärt dir, was zu sehen ist.
-      </p>
-    </header>
 
-    <main class="layout">
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <h3>Bildanalyse</h3>
-        <p class="hint">Wähle ein Bild aus – die Analyse startet automatisch.</p>
-        <input type="file" id="imageInput" accept="image/*" class="upload-input">
-
-        <h3>Was kann EduAI?</h3>
-        <ul class="feature-list">
-          <li>Schulfragen & Erklärungen</li>
-          <li>Allgemeinwissen & Zusammenfassungen</li>
-          <li>Bildinhalte erklären</li>
-          <li>Technik & Coding‑Fragen</li>
+      <div class="info-box glass">
+        <h3>Funktionen</h3>
+        <ul>
+          <li> KI‑Chat</li>
+          <li> Erklärungen</li>
+          <li> Bildanalyse</li>
+          <li> Coding‑Hilfe</li>
         </ul>
-      </aside>
+      </div>
+    </aside>
 
-      <!-- Chat -->
-      <section class="chat-card">
-        <div id="chat-box" class="chat-box"></div>
+    <!-- Chat -->
+    <main class="chat-area glass">
+      <div id="chat-box" class="chat-box"></div>
 
-        <div class="input-row">
-          <input id="msg" placeholder="Frag EduAI etwas…">
-          <button onclick="sendMessage()">Senden</button>
-        </div>
-      </section>
+      <div class="input-row glass">
+        <input id="msg" placeholder="Frag EduAI etwas…">
+        <button onclick="sendMessage()">Senden</button>
+      </div>
     </main>
-
-    <footer class="footer">
-      <p>© 2026 EduAI – Smarter KI‑Chat</p>
-    </footer>
 
   </div>
 
