@@ -6,22 +6,22 @@
 }
 
 :root {
-  --bg: #0a0a0f;
-  --bg-card: #11121a;
-  --bg-chat: #0c0d14;
-  --accent: #6366f1;
-  --accent-strong: #4f46e5;
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
-  --border-subtle: rgba(148, 163, 184, 0.25);
-  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+  --bg: #ffffff;
+  --bg-card: #f5f5f7;
+  --bg-chat: #ffffff;
+  --accent: #3b82f6;
+  --accent-strong: #2563eb;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --border-subtle: rgba(0,0,0,0.15);
+  --shadow-soft: 0 8px 25px rgba(0,0,0,0.08);
   --radius-pill: 999px;
   --font-main: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
 }
 
 body {
   margin: 0;
-  background: radial-gradient(circle at top, #1e1b4b 0, #0a0a0f 60%);
+  background: var(--bg);
   color: var(--text-main);
   font-family: var(--font-main);
   height: 100vh;
@@ -40,10 +40,10 @@ body {
 
 /* HEADER */
 .header {
-  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(79, 70, 229, 0.25));
+  background: #ffffff;
   border-radius: 20px;
   padding: 20px;
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-soft);
   margin-bottom: 14px;
 }
@@ -54,15 +54,8 @@ body {
   gap: 12px;
 }
 
-.logo-circle {
-  width: 42px;
-  height: 42px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
+.logo-img {
+  width: 60px;
 }
 
 .subtitle {
@@ -70,16 +63,11 @@ body {
   margin: 0;
 }
 
-.header-text {
-  margin-top: 8px;
-  opacity: 0.9;
-}
-
 /* ADS */
 .ad-section {
   margin-bottom: 14px;
   padding: 10px 0;
-  background: rgba(99, 102, 241, 0.08);
+  background: #fafafa;
   border-radius: 16px;
 }
 
@@ -100,7 +88,7 @@ body {
   background: var(--bg-card);
   border-radius: 20px;
   padding: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.35);
+  border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-soft);
 
   min-height: 0;
@@ -113,14 +101,13 @@ body {
 
   background: var(--bg-chat);
   border-radius: 16px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  border: 1px solid var(--border-subtle);
 
   padding: 20px;
   margin-bottom: 14px;
 
-  font-size: 1.1rem;
-  line-height: 1.7;
-  letter-spacing: 0.2px;
+  font-size: 1.05rem;
+  line-height: 1.6;
 
   max-width: 900px;
   width: 100%;
@@ -133,7 +120,7 @@ body {
   width: 8px;
 }
 .chat-box::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.7);
+  background: #c5c5c5;
   border-radius: 999px;
 }
 
@@ -154,8 +141,8 @@ body {
   justify-content: flex-end;
 }
 .message.user .bubble {
-  background: rgba(99, 102, 241, 0.25);
-  border: 1px solid rgba(129, 140, 248, 0.6);
+  background: #e0e7ff;
+  border: 1px solid #c7d2fe;
 }
 
 /* BOT */
@@ -163,9 +150,8 @@ body {
   justify-content: flex-start;
 }
 .message.assistant .bubble {
-  background: #141726;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  color: #e5e7eb;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
 }
 
 /* INPUT */
@@ -178,9 +164,9 @@ body {
   flex: 1;
   padding: 12px 14px;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  background: #0d1020;
-  color: white;
+  border: 1px solid var(--border-subtle);
+  background: #ffffff;
+  color: var(--text-main);
   font-size: 1rem;
 }
 
@@ -192,6 +178,11 @@ body {
   color: white;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* Vision Upload */
+.upload-input {
+  margin-top: 10px;
 }
 
 /* FOOTER */
