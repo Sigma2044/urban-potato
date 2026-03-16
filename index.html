@@ -9,7 +9,7 @@
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- Google AdSense Client -->
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9858751801616084"
      crossorigin="anonymous"></script>
 </head>
@@ -17,9 +17,10 @@
 <body>
   <div class="page-wrapper">
 
+    <!-- HEADER -->
     <header class="header">
       <div class="logo-title">
-        <img src="logo.png" class="logo-img">
+        <img src="logo.png" class="logo-img" alt="EduAI Logo">
         <div>
           <h1>EduAI</h1>
           <p class="subtitle">Der schnelle, smarte KI‑Chatbot</p>
@@ -41,19 +42,28 @@
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </section>
 
-    <!-- FULLSCREEN CHAT -->
+    <!-- CHAT FULLSCREEN -->
     <main class="chat-fullscreen">
 
       <section class="chat-card">
 
+        <!-- MODUS AUSWAHL -->
+        <div class="mode-select">
+          <button onclick="setMode('chat')">Chat</button>
+          <button onclick="setMode('vision')">Bild analysieren</button>
+          <button onclick="setMode('generate')"> Bild generieren</button>
+        </div>
+
+        <!-- CHATBOX -->
         <div id="chat-box" class="chat-box"></div>
 
+        <!-- TEXT INPUT -->
         <div class="input-row">
           <input id="msg" placeholder="Frag EduAI etwas…">
           <button onclick="sendMessage()">Senden</button>
         </div>
 
-        <!-- Vision Upload -->
+        <!-- BILD UPLOAD (für Vision) -->
         <input type="file" id="imageInput" accept="image/*" class="upload-input">
 
       </section>
@@ -71,6 +81,7 @@
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </section>
 
+    <!-- FOOTER -->
     <footer class="footer">
       <p>© 2026 EduAI – Smarter KI‑Chatbot</p>
     </footer>
