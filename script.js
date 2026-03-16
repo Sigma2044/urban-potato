@@ -2,8 +2,8 @@ const chatBox = document.getElementById("chat-box");
 const input = document.getElementById("msg");
 const imageInput = document.getElementById("imageInput");
 
-// Deine Render Backend URL
-const API_BASE = "https://eduai.5b85.onrender.com";
+// Deine Backend URL
+const API_BASE = "https://eduai-5b85.onrender.com";
 
 /* -------------------------
    SENDEN
