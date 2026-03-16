@@ -36,7 +36,7 @@ async function sendText(msg) {
   const loading = addLoading();
 
   try {
-    const res = await fetch("http://localhost:3000/chat", {
+    const res = await fetch("http://eduai-sos2.onrender.com/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: msg })
@@ -66,7 +66,7 @@ async function analyzeImage() {
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await fetch("http://localhost:3000/vision", {
+    const res = await fetch("http://eduai-sos2.onrender.com/vision", {
       method: "POST",
       body: formData
     });
@@ -85,7 +85,7 @@ async function generateImage(prompt) {
   const loading = addLoading();
 
   try {
-    const res = await fetch("http://localhost:3000/generate", {
+    const res = await fetch("http://eduai-sos2.onrender.com/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt })
