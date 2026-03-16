@@ -19,7 +19,7 @@
 
     <header class="header">
       <div class="logo-title">
-        <div class="logo-circle">⚡</div>
+        <img src="logo.png" class="logo-img">
         <div>
           <h1>EduAI</h1>
           <p class="subtitle">Der schnelle, smarte KI‑Chatbot</p>
@@ -30,7 +30,7 @@
       </p>
     </header>
 
-    <!-- ⭐ TOP AD -->
+    <!-- TOP AD -->
     <section class="ad-section">
       <ins class="adsbygoogle"
           style="display:block"
@@ -41,11 +41,10 @@
       <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </section>
 
-    <!-- ⭐ FULLSCREEN CHAT -->
+    <!-- FULLSCREEN CHAT -->
     <main class="chat-fullscreen">
 
       <section class="chat-card">
-        <h2 class="chat-title">Chat</h2>
 
         <div id="chat-box" class="chat-box"></div>
 
@@ -53,11 +52,15 @@
           <input id="msg" placeholder="Frag EduAI etwas…">
           <button onclick="sendMessage()">Senden</button>
         </div>
+
+        <!-- Vision Upload -->
+        <input type="file" id="imageInput" accept="image/*" class="upload-input">
+
       </section>
 
     </main>
 
-    <!-- ⭐ BOTTOM AD -->
+    <!-- BOTTOM AD -->
     <section class="ad-section ad-bottom">
       <ins class="adsbygoogle"
           style="display:block"
@@ -70,7 +73,6 @@
 
     <footer class="footer">
       <p>© 2026 EduAI – Smarter KI‑Chatbot</p>
-      <p class="footer-small">Beta-Version – Antworten können Fehler enthalten.</p>
     </footer>
 
   </div>
