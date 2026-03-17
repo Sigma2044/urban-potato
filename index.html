@@ -331,6 +331,17 @@
         </header>
 
         <div id="chat-view" class="view active">
+            <div id="model-switcher" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-300">
+    <button id="flash-mode-btn" onclick="setMode('flash')" 
+        class="px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a]">
+        ⚡ Flash
+    </button>
+
+    <button id="codex-mode-btn" onclick="setMode('codex')" 
+        class="px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a]">
+        💻 Codex
+    </button>
+</div>
             <div id="chat-window">
                 <div class="message message-ai welcome-msg">
                     Hey! Ich bin <strong>EduAI</strong>. Ich helfe dir beim Lernen, Planen und Verstehen. Frag mich einfach alles!
@@ -390,7 +401,24 @@
         const previewContainer = document.getElementById('image-preview-container');
         const navDropdown = document.getElementById('nav-dropdown');
         const plusMenu = document.getElementById('plus-menu');
+        // Chat-Verlauf speichern
+let chatHistory = [];
 
+function addToHistory(role, content) {
+    chatHistory.push({ role, content });
+}
+// Standard-Modus
+let currentMode = "flash";
+
+function setMode(mode) {
+    currentMode = mode;
+
+    // UI aktualisieren
+    document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
+    document.getElementById(mode + "-mode-btn").classList.add("active");
+}
+
+        
         const API_URL = 'https://eduai-5b85.onrender.com/chat';
 
         function handleLogoError() {
@@ -469,6 +497,8 @@
 
             const localImg = file ? URL.createObjectURL(file) : null;
             appendMessage('user', text, localImg);
+            addToHistory("user", text);
+
             
             messageInput.value = '';
             clearImage();
@@ -486,13 +516,17 @@
             const formData = new FormData();
             formData.append('message', text);
             if (file) formData.append('image', file);
+            formData.append("history", JSON.stringify(chatHistory));
+            formData.append("mode", currentMode);
 
+            
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: formData });
                 const data = await res.json();
                 thinking.remove();
                 appendMessage('ai', data.reply || data.response || "Antwort erhalten.");
-            } catch (err) {
+                addToHistory("assistant", data.reply);
+                } catch (err) {
                 thinking.remove();
                 appendMessage('ai', "Netzwerkfehler.");
             }
