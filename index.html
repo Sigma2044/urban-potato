@@ -150,166 +150,61 @@
             white-space: pre-wrap;
         }
 
-        .welcome-msg { white-space: normal !important; }
-
-        /* Thinking Animation */
-        .ai-thinking {
+        /* Model Switcher Styling */
+        .model-switcher {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 14px;
-            background: var(--bubble-ai);
-            border-radius: 1.15rem;
-            border-bottom-left-radius: 0.2rem;
-            width: fit-content;
+            justify-content: center;
+            gap: 0.5rem;
             margin-bottom: 0.5rem;
         }
 
-        .thinking-wave {
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            height: 12px;
+        .model-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid #333;
+            background: #171717;
+            color: #737373;
+            transition: all 0.2s;
+            cursor: pointer;
         }
 
-        .wave-bar {
-            width: 3px;
-            height: 6px;
-            background: var(--accent);
-            border-radius: 1px;
-            animation: waveAnim 0.8s infinite ease-in-out;
+        .model-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(59, 130, 246, 0.1);
         }
 
+        /* Restliche Styles beibehalten... */
+        .ai-thinking { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: var(--bubble-ai); border-radius: 1.15rem; border-bottom-left-radius: 0.2rem; width: fit-content; margin-bottom: 0.5rem; }
+        .thinking-wave { display: flex; align-items: flex-end; gap: 3px; height: 12px; }
+        .wave-bar { width: 3px; height: 6px; background: var(--accent); border-radius: 1px; animation: waveAnim 0.8s infinite ease-in-out; }
         .wave-bar:nth-child(2) { animation-delay: 0.1s; height: 9px; }
         .wave-bar:nth-child(3) { animation-delay: 0.2s; height: 12px; }
         .wave-bar:nth-child(4) { animation-delay: 0.3s; height: 9px; }
         .wave-bar:nth-child(5) { animation-delay: 0.4s; height: 6px; }
-
-        @keyframes waveAnim {
-            0%, 100% { transform: scaleY(1); opacity: 0.4; }
-            50% { transform: scaleY(1.6); opacity: 1; background: #60a5fa; }
-        }
-
-        /* Input Area */
-        .input-area {
-            padding: 0.5rem 1rem 1.25rem 1rem;
-            background: var(--bg-color);
-        }
-
-        .input-wrapper {
-            background-color: var(--card-bg);
-            border: 1px solid #262626;
-            border-radius: 1.75rem;
-            display: flex;
-            align-items: center;
-            padding: 0.3rem 0.5rem;
-            position: relative;
-        }
-
-        #message-input {
-            background: transparent;
-            border: none;
-            color: white;
-            flex: 1;
-            padding: 0.6rem 0.5rem;
-            outline: none;
-            font-size: 1rem;
-            min-width: 0;
-        }
-
-        .icon-btn {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s;
-            color: #a3a3a3;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .icon-btn:active { background-color: #333; transform: scale(0.95); }
-
-        /* Neuer Style für den Bild-Auswahl Button */
-        .plus-btn-styled {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff !important;
-        }
-        
-        .plus-btn-styled:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--accent);
-        }
-
-        /* Action Menu Styling */
-        .action-menu {
-            position: absolute;
-            bottom: 100%;
-            left: 0.5rem;
-            margin-bottom: 0.75rem;
-            background: #1f1f1f;
-            border: 1px solid #333;
-            border-radius: 1rem;
-            display: none;
-            flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            min-width: 180px;
-            overflow: hidden;
-            animation: menuPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes menuPop {
-            from { opacity: 0; transform: scale(0.8) translateY(10px); }
-            to { opacity: 1; transform: scale(1) translateY(0); }
-        }
-
-        .menu-item {
-            padding: 1rem 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: #d4d4d4;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.2s;
-        }
-
+        @keyframes waveAnim { 0%, 100% { transform: scaleY(1); opacity: 0.4; } 50% { transform: scaleY(1.6); opacity: 1; background: #60a5fa; } }
+        .input-area { padding: 0.5rem 1rem 1.25rem 1rem; background: var(--bg-color); }
+        .input-wrapper { background-color: var(--card-bg); border: 1px solid #262626; border-radius: 1.75rem; display: flex; align-items: center; padding: 0.3rem 0.5rem; position: relative; }
+        #message-input { background: transparent; border: none; color: white; flex: 1; padding: 0.6rem 0.5rem; outline: none; font-size: 1rem; min-width: 0; }
+        .icon-btn { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.2s; color: #a3a3a3; cursor: pointer; flex-shrink: 0; }
+        .plus-btn-styled { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff !important; }
+        .action-menu { position: absolute; bottom: 100%; left: 0.5rem; margin-bottom: 0.75rem; background: #1f1f1f; border: 1px solid #333; border-radius: 1rem; display: none; flex-direction: column; min-width: 180px; animation: menuPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 100; }
+        .menu-item { padding: 1rem 1.25rem; display: flex; align-items: center; gap: 0.75rem; color: #d4d4d4; cursor: pointer; transition: background 0.2s; }
         .menu-item:hover { background: #2d2d2d; color: white; }
-        .menu-item svg { color: var(--accent); }
-
-        #image-preview-container { 
-            display: none; 
-            padding: 0.5rem 1rem; 
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            right: 0;
-            background: var(--bg-color);
-            z-index: 10;
-        }
-
+        #image-preview-container { display: none; padding: 0.5rem 1rem; position: absolute; bottom: 100%; left: 0; right: 0; background: var(--bg-color); z-index: 10; }
         .view { display: none; height: 100%; overflow: hidden; }
         .view.active { display: flex; flex-direction: column; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        @media (max-width: 380px) {
-            .message { max-width: 92%; font-size: 0.875rem; }
-            .logo-fallback { font-size: 1.1rem; }
-        }
     </style>
 </head>
 <body>
 
     <div class="app-container">
-        <!-- Header -->
         <header class="top-header">
             <div class="logo-container">
-                <button class="icon-btn" id="menu-toggle-btn" aria-label="Menü">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                <button class="icon-btn" id="menu-toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
                 <div id="logo-wrapper">
                     <img src="content.png" alt="eduai" class="logo-img" id="main-logo" onerror="handleLogoError()">
@@ -317,70 +212,54 @@
             </div>
             
             <div id="nav-dropdown" class="nav-dropdown">
-                <div class="nav-item active" onclick="switchView('chat')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                    Chat
-                </div>
-                <div class="nav-item" onclick="switchView('features')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    Features & Info
-                </div>
+                <div class="nav-item active" onclick="switchView('chat')">Chat</div>
+                <div class="nav-item" onclick="switchView('features')">Features</div>
             </div>
         </header>
 
-        <!-- Chat View -->
         <div id="chat-view" class="view active">
             <div id="chat-window">
                 <div class="message message-ai welcome-msg">
-                    Hey! Ich bin <strong>EduAI</strong>. Ich helfe dir beim Lernen, Planen und Verstehen. Frag mich einfach alles!
+                    Hey! Ich bin <strong>EduAI</strong>. Welches Modell möchtest du nutzen?
                 </div>
             </div>
 
             <div class="input-area">
+                <div class="model-switcher">
+                    <button type="button" class="model-btn active" id="btn-qwen" onclick="selectModel('qwen')">Qwen (Smart)</button>
+                    <button type="button" class="model-btn" id="btn-mistral" onclick="selectModel('mistral')">Mistral (Fast)</button>
+                </div>
+
                 <div id="image-preview-container">
-                    <div class="preview-badge">
-                        <span id="file-name" class="truncate max-w-[150px]">bild.jpg</span>
-                        <button onclick="clearImage()" class="ml-2 text-red-400">✕</button>
+                    <div class="preview-badge bg-[#171717] p-2 rounded-lg border border-blue-500 inline-flex items-center">
+                        <span id="file-name" class="text-xs mr-2">bild.jpg</span>
+                        <button onclick="clearImage()" class="text-red-400">✕</button>
                     </div>
                 </div>
 
                 <form id="chat-form" class="input-wrapper" onsubmit="handleChatSubmit(event)">
                     <input type="file" id="file-input" accept="image/*" hidden onchange="handleFileChange()">
                     
-                    <!-- Verbessertes Plus Menü -->
                     <div id="plus-menu" class="action-menu">
-                        <div class="menu-item" onclick="document.getElementById('file-input').click()">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
-                            Bild wählen
-                        </div>
+                        <div class="menu-item" onclick="document.getElementById('file-input').click()">Bild wählen</div>
                     </div>
 
                     <button type="button" id="plus-btn" class="icon-btn plus-btn-styled" onclick="togglePlusMenu(event)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </button>
 
                     <input type="text" id="message-input" placeholder="Nachricht an EduAI..." autocomplete="off">
 
                     <button type="submit" id="send-btn" class="icon-btn" style="color: var(--accent)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                     </button>
                 </form>
             </div>
         </div>
 
-        <!-- Features View -->
         <div id="features-view" class="view p-6 pt-24 overflow-y-auto">
-            <h1 class="text-2xl font-bold mb-4">EduAI Features</h1>
-            <div class="space-y-4">
-                <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
-                    <h3 class="text-blue-400 font-bold">🚀 Hausaufgaben-Hilfe</h3>
-                    <p class="text-sm text-gray-400 mt-1">Lade Fotos von Aufgaben hoch oder beschreibe sie einfach.</p>
-                </div>
-                <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
-                    <h3 class="text-blue-400 font-bold">📚 Lernpläne</h3>
-                    <p class="text-sm text-gray-400 mt-1">Lass dir individuelle Pläne für Prüfungen erstellen.</p>
-                </div>
-            </div>
+            <h1 class="text-2xl font-bold mb-4">Features</h1>
+            <p>Hier stehen deine Infos...</p>
         </div>
     </div>
 
@@ -392,23 +271,27 @@
         const navDropdown = document.getElementById('nav-dropdown');
         const plusMenu = document.getElementById('plus-menu');
 
+        let selectedModel = 'qwen'; // Standard
         const API_URL = 'https://eduai-5b85.onrender.com/chat';
 
+        function selectModel(model) {
+            selectedModel = model;
+            document.getElementById('btn-qwen').classList.toggle('active', model === 'qwen');
+            document.getElementById('btn-mistral').classList.toggle('active', model === 'mistral');
+        }
+
         function handleLogoError() {
-            const wrapper = document.getElementById('logo-wrapper');
-            wrapper.innerHTML = '<span class="logo-fallback">eduai</span>';
+            document.getElementById('logo-wrapper').innerHTML = '<span class="logo-fallback">eduai</span>';
         }
 
         document.getElementById('menu-toggle-btn').onclick = (e) => {
             e.stopPropagation();
             navDropdown.style.display = navDropdown.style.display === 'flex' ? 'none' : 'flex';
-            plusMenu.style.display = 'none';
         };
 
         function togglePlusMenu(e) {
             e.stopPropagation();
             plusMenu.style.display = plusMenu.style.display === 'flex' ? 'none' : 'flex';
-            navDropdown.style.display = 'none';
         }
 
         document.onclick = () => {
@@ -418,10 +301,8 @@
 
         function switchView(view) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById(view + '-view').classList.add('active');
             navDropdown.style.display = 'none';
-            if (view === 'chat') chatWindow.scrollTop = chatWindow.scrollHeight;
         }
 
         function handleFileChange() {
@@ -437,27 +318,18 @@
             previewContainer.style.display = 'none';
         }
 
-        function formatText(text) {
-            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        }
-
         function appendMessage(role, text, imgUrl = null) {
             const msgDiv = document.createElement('div');
             msgDiv.className = `message message-${role}`;
-            
             if (imgUrl) {
                 const img = document.createElement('img');
                 img.src = imgUrl;
                 img.className = 'rounded-lg mb-2 max-w-full h-auto';
                 msgDiv.appendChild(img);
             }
-            
-            if (text) {
-                const content = document.createElement('div');
-                content.innerHTML = role === 'ai' ? formatText(text) : text;
-                msgDiv.appendChild(content);
-            }
-            
+            const content = document.createElement('div');
+            content.innerHTML = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            msgDiv.appendChild(content);
             chatWindow.appendChild(msgDiv);
             chatWindow.scrollTop = chatWindow.scrollHeight;
         }
@@ -470,22 +342,18 @@
 
             const localImg = file ? URL.createObjectURL(file) : null;
             appendMessage('user', text, localImg);
-            
             messageInput.value = '';
             clearImage();
 
             const thinking = document.createElement('div');
             thinking.className = 'ai-thinking';
-            thinking.innerHTML = `
-                <div class="thinking-wave">
-                    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
-                </div>
-            `;
+            thinking.innerHTML = '<div class="thinking-wave"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>';
             chatWindow.appendChild(thinking);
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
             const formData = new FormData();
             formData.append('message', text);
+            formData.append('model', selectedModel); // HIER: Das gewählte Modell mitsenden
             if (file) formData.append('image', file);
 
             try {
@@ -498,14 +366,6 @@
                 appendMessage('ai', "Netzwerkfehler.");
             }
         }
-
-        window.addEventListener('resize', () => {
-            if (document.activeElement.tagName === 'INPUT') {
-                setTimeout(() => {
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-                }, 50);
-            }
-        });
     </script>
 </body>
 </html>
