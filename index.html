@@ -6,6 +6,8 @@
     <title>eduai - Smart Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
         :root {
             --bg-color: #0a0a0a;
             --card-bg: #171717;
@@ -467,31 +469,47 @@ function setMode(mode) {
       function formatText(text) {
     if (!text) return "";
 
-    // 1. HTML-eigene Zeichen maskieren, um XSS-Fehler zu vermeiden
+    // 1. HTML-eigene Zeichen maskieren (Sicherheit gegen XSS)
     let html = text
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 
-    // 2. Code-Blöcke formatieren (```code```)
+    // 2. LaTeX / KaTeX Mathematische Formeln rendern
+    // Große, freistehende Formeln \[ ... \]
+    html = html.replace(/\\\[([\s\S]*?)\\\]/g, (match, equation) => {
+        try {
+            return '<div class="my-3 text-center overflow-x-auto">' + katex.renderToString(equation.trim(), { displayMode: true }) + '</div>';
+        } catch (err) {
+            return match; // Fallback bei Fehlern
+        }
+    });
+
+    // Kleine Inline-Formeln \( ... \) oder $ ... $
+    html = html.replace(/\\\(([\s\S]*?)\\\)/g, (match, equation) => {
+        try {
+            return katex.renderToString(equation.trim(), { displayMode: false });
+        } catch (err) {
+            return match;
+        }
+    });
+
+    // 3. Code-Blöcke formatieren (```code```)
     html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#1a1a1a] p-3 rounded-lg my-2 font-mono text-sm overflow-x-auto border border-[#333]">$1</pre>');
 
-    // 3. Inline-Code formatieren (`code`)
+    // 4. Inline-Code formatieren (`code`)
     html = html.replace(/`([^`]+)`/g, '<code class="bg-[#1a1a1a] px-1.5 py-0.5 rounded font-mono text-sm text-blue-400">$1</code>');
 
-    // 4. Fettgedruckten Text formatieren (**text**)
+    // 5. Fettgedruckten Text formatieren (**text**)
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-    // 5. Aufzählungszeichen formatieren (* Liste oder - Liste)
-    // Ersetzt Linien, die mit * oder - beginnen, durch HTML-Listenpunkte
+    // 6. Listen formatieren (* oder -)
     html = html.replace(/^(?:\*|-)\s+(.+)$/gm, '<li class="list-disc ml-5">$1</li>');
 
-    // 6. Nummerierte Listen formatieren (1. Liste)
+    // 7. Nummerierte Listen formatieren (1.)
     html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li class="list-decimal ml-5">$2</li>');
 
-    // 7. Normale Zeilenumbrüche in <br> umwandeln (außerhalb von Listen/Code, falls nötig)
-    // Da du "white-space: pre-wrap" im CSS hast, brauchst du das eventuell gar nicht.
-    // Falls Absätze komisch aussehen, sorgt das hier für saubere Abstände:
+    // 8. Zeilenumbrüche
     html = html.replace(/\n/g, '<br>');
 
     return html;
