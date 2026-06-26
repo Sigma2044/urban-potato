@@ -139,14 +139,14 @@
             border-bottom-right-radius: 0.2rem;
         }
 
-        .message-ai {
-            align-self: flex-start;
-            background-color: var(--bubble-ai);
-            color: var(--text-main);
-            border-bottom-left-radius: 0.2rem;
-            white-space: pre-wrap;
-        }
-
+       .message-ai {
+    align-self: flex-start;
+    background-color: var(--bubble-ai);
+    color: var(--text-main);
+    border-bottom-left-radius: 0.2rem;
+    /* Ermöglicht, dass Listen und Blöcke sauber untereinander stehen */
+    display: block; 
+}
         .welcome-msg { white-space: normal !important; }
 
         .ai-thinking {
@@ -464,9 +464,38 @@ function setMode(mode) {
             previewContainer.style.display = 'none';
         }
 
-        function formatText(text) {
-            return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-        }
+      function formatText(text) {
+    if (!text) return "";
+
+    // 1. HTML-eigene Zeichen maskieren, um XSS-Fehler zu vermeiden
+    let html = text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    // 2. Code-Blöcke formatieren (```code```)
+    html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#1a1a1a] p-3 rounded-lg my-2 font-mono text-sm overflow-x-auto border border-[#333]">$1</pre>');
+
+    // 3. Inline-Code formatieren (`code`)
+    html = html.replace(/`([^`]+)`/g, '<code class="bg-[#1a1a1a] px-1.5 py-0.5 rounded font-mono text-sm text-blue-400">$1</code>');
+
+    // 4. Fettgedruckten Text formatieren (**text**)
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // 5. Aufzählungszeichen formatieren (* Liste oder - Liste)
+    // Ersetzt Linien, die mit * oder - beginnen, durch HTML-Listenpunkte
+    html = html.replace(/^(?:\*|-)\s+(.+)$/gm, '<li class="list-disc ml-5">$1</li>');
+
+    // 6. Nummerierte Listen formatieren (1. Liste)
+    html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li class="list-decimal ml-5">$2</li>');
+
+    // 7. Normale Zeilenumbrüche in <br> umwandeln (außerhalb von Listen/Code, falls nötig)
+    // Da du "white-space: pre-wrap" im CSS hast, brauchst du das eventuell gar nicht.
+    // Falls Absätze komisch aussehen, sorgt das hier für saubere Abstände:
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
+}
 
         function appendMessage(role, text, imgUrl = null) {
             const msgDiv = document.createElement('div');
