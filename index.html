@@ -396,196 +396,251 @@
         </div>
     </div>
 
-    <script>
-        const chatWindow = document.getElementById('chat-window');
-        const messageInput = document.getElementById('message-input');
-        const fileInput = document.getElementById('file-input');
-        const previewContainer = document.getElementById('image-preview-container');
-        const navDropdown = document.getElementById('nav-dropdown');
-        const plusMenu = document.getElementById('plus-menu');
-        // Chat-Verlauf speichern
-let chatHistory = [];
+   <script>
+    const chatWindow = document.getElementById('chat-window');
+    const messageInput = document.getElementById('message-input');
+    const fileInput = document.getElementById('file-input');
+    const previewContainer = document.getElementById('image-preview-container');
+    const navDropdown = document.getElementById('nav-dropdown');
+    const plusMenu = document.getElementById('plus-menu');
+    
+    // Globale Variablen für Chat-Verlauf und Modus
+    let chatHistory = [];
+    let currentMode = "flash";
 
-function addToHistory(role, content) {
-    chatHistory.push({ role, content });
-}
-// Standard-Modus
-let currentMode = "flash";
+    // Funktion zum Hinzufügen von Nachrichten zur Historie
+    function addToHistory(role, content) {
+        chatHistory.push({ role, content });
+    }
 
-function setMode(mode) {
-    currentMode = mode;
-
-    // UI aktualisieren
-    document.querySelectorAll(".nav-item").forEach(i => i.classList.remove("active"));
-    document.getElementById(mode + "-mode-btn").classList.add("active");
-}
-
+    // Funktion zum Umschalten des Modus (Flash/Codex)
+    function setMode(mode) {
+        currentMode = mode;
         
-        const API_URL = 'https://eduai-5b85.onrender.com/chat';
+        const flashBtn = document.getElementById("flash-mode-btn");
+        const codexBtn = document.getElementById("codex-mode-btn");
 
-        function handleLogoError() {
-            const wrapper = document.getElementById('logo-wrapper');
-            wrapper.innerHTML = '<span class="logo-fallback">eduai</span>';
+        // UI-Styling für die Modus-Buttons anpassen via Tailwind Klassen
+        if (mode === 'flash') {
+            flashBtn.className = "px-3 py-1 rounded-lg border border-blue-500 bg-blue-500/10 text-blue-400 transition-all";
+            codexBtn.className = "px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a] text-gray-300 transition-all";
+        } else {
+            codexBtn.className = "px-3 py-1 rounded-lg border border-blue-500 bg-blue-500/10 text-blue-400 transition-all";
+            flashBtn.className = "px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a] text-gray-300 transition-all";
         }
+    }
+    
+    // Die URL deines Backend-API
+    const API_URL = 'https://eduai-5b85.onrender.com/chat';
 
-        document.getElementById('menu-toggle-btn').onclick = (e) => {
-            e.stopPropagation();
-            navDropdown.style.display = navDropdown.style.display === 'flex' ? 'none' : 'flex';
-            plusMenu.style.display = 'none';
-        };
+    // Fehlerbehandlung für das Logo
+    function handleLogoError() {
+        const wrapper = document.getElementById('logo-wrapper');
+        wrapper.innerHTML = '<span class="logo-fallback">eduai</span>';
+    }
 
-        function togglePlusMenu(e) {
-            e.stopPropagation();
-            plusMenu.style.display = plusMenu.style.display === 'flex' ? 'none' : 'flex';
-            navDropdown.style.display = 'none';
-        }
+    // Menü-Toggle (Hamburger)
+    document.getElementById('menu-toggle-btn').onclick = (e) => {
+        e.stopPropagation();
+        navDropdown.style.display = navDropdown.style.display === 'flex' ? 'none' : 'flex';
+        plusMenu.style.display = 'none';
+    };
 
-        document.onclick = () => {
-            navDropdown.style.display = 'none';
-            plusMenu.style.display = 'none';
-        };
+    // Plus-Menü-Toggle (Bild hochladen)
+    function togglePlusMenu(e) {
+        e.stopPropagation();
+        plusMenu.style.display = plusMenu.style.display === 'flex' ? 'none' : 'flex';
+        navDropdown.style.display = 'none';
+    }
 
-        function switchView(view) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById(view + '-view').classList.add('active');
-            navDropdown.style.display = 'none';
-            if (view === 'chat') chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
+    // Menüs schließen, wenn man außerhalb klickt
+    document.onclick = () => {
+        navDropdown.style.display = 'none';
+        plusMenu.style.display = 'none';
+    };
 
-        function handleFileChange() {
-            if (fileInput.files[0]) {
-                document.getElementById('file-name').textContent = fileInput.files[0].name;
-                previewContainer.style.display = 'block';
-                plusMenu.style.display = 'none';
-            }
-        }
+    // View-Umschaltung (Chat, Features)
+    function switchView(view) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        
+        document.getElementById(view + '-view').classList.add('active');
+        const navItem = document.getElementById('nav-' + view);
+        if (navItem) navItem.classList.add('active');
+        
+        navDropdown.style.display = 'none';
+        if (view === 'chat') chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
 
-        function clearImage() {
-            fileInput.value = '';
-            previewContainer.style.display = 'none';
-        }
+    // ERWEITERTE TEXT-FORMATIERUNG für Markdown & LaTeX (KaTeX)
+    function formatText(text) {
+        if (!text) return "";
 
-      function formatText(text) {
-    if (!text) return "";
+        // 1. HTML-eigene Zeichen maskieren (Sicherheit gegen XSS)
+        let html = text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
 
-    // 1. HTML-eigene Zeichen maskieren (Sicherheit gegen XSS)
-    let html = text
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-
-    // 2. LaTeX / KaTeX Mathematische Formeln rendern
-    // Große, freistehende Formeln \[ ... \]
-    html = html.replace(/\\\[([\s\S]*?)\\\]/g, (match, equation) => {
-        try {
-            return '<div class="my-3 text-center overflow-x-auto">' + katex.renderToString(equation.trim(), { displayMode: true }) + '</div>';
-        } catch (err) {
-            return match; // Fallback bei Fehlern
-        }
-    });
-
-    // Kleine Inline-Formeln \( ... \) oder $ ... $
-    html = html.replace(/\\\(([\s\S]*?)\\\)/g, (match, equation) => {
-        try {
-            return katex.renderToString(equation.trim(), { displayMode: false });
-        } catch (err) {
-            return match;
-        }
-    });
-
-    // 3. Code-Blöcke formatieren (```code```)
-    html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#1a1a1a] p-3 rounded-lg my-2 font-mono text-sm overflow-x-auto border border-[#333]">$1</pre>');
-
-    // 4. Inline-Code formatieren (`code`)
-    html = html.replace(/`([^`]+)`/g, '<code class="bg-[#1a1a1a] px-1.5 py-0.5 rounded font-mono text-sm text-blue-400">$1</code>');
-
-    // 5. Fettgedruckten Text formatieren (**text**)
-    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    // 6. Listen formatieren (* oder -)
-    html = html.replace(/^(?:\*|-)\s+(.+)$/gm, '<li class="list-disc ml-5">$1</li>');
-
-    // 7. Nummerierte Listen formatieren (1.)
-    html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li class="list-decimal ml-5">$2</li>');
-
-    // 8. Zeilenumbrüche
-    html = html.replace(/\n/g, '<br>');
-
-    return html;
-}
-
-        function appendMessage(role, text, imgUrl = null) {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `message message-${role}`;
-            
-            if (imgUrl) {
-                const img = document.createElement('img');
-                img.src = imgUrl;
-                img.className = 'rounded-lg mb-2 max-w-full h-auto';
-                msgDiv.appendChild(img);
-            }
-            
-            if (text) {
-                const content = document.createElement('div');
-                content.innerHTML = role === 'ai' ? formatText(text) : text;
-                msgDiv.appendChild(content);
-            }
-            
-            chatWindow.appendChild(msgDiv);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-        }
-
-        async function handleChatSubmit(e) {
-            e.preventDefault();
-            const text = messageInput.value.trim();
-            const file = fileInput.files[0];
-            if (!text && !file) return;
-
-            const localImg = file ? URL.createObjectURL(file) : null;
-            appendMessage('user', text, localImg);
-            addToHistory("user", text);
-
-            
-            messageInput.value = '';
-            clearImage();
-
-            const thinking = document.createElement('div');
-            thinking.className = 'ai-thinking';
-            thinking.innerHTML = `
-                <div class="thinking-wave">
-                    <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
-                </div>
-            `;
-            chatWindow.appendChild(thinking);
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-
-            const formData = new FormData();
-            formData.append('message', text);
-            if (file) formData.append('image', file);
-            formData.append("history", JSON.stringify(chatHistory));
-            formData.append("mode", currentMode);
-
-            
+        // 2. LaTeX / KaTeX Mathematische Formeln rendern
+        // Große, freistehende Formeln \[ ... \]
+        html = html.replace(/\\\[([\s\S]*?)\\\]/g, (match, equation) => {
             try {
-                const res = await fetch(API_URL, { method: 'POST', body: formData });
-                const data = await res.json();
-                thinking.remove();
-                appendMessage('ai', data.reply || data.response || "Antwort erhalten.");
-                addToHistory("assistant", data.reply);
-                } catch (err) {
-                thinking.remove();
-                appendMessage('ai', "Netzwerkfehler.");
-            }
-        }
-
-        window.addEventListener('resize', () => {
-            if (document.activeElement.tagName === 'INPUT') {
-                setTimeout(() => {
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-                }, 50);
+                // displayMode: true für freistehende, zentrierte Formeln
+                return '<div class="my-3 text-center overflow-x-auto w-full">' + katex.renderToString(equation.trim(), { displayMode: true }) + '</div>';
+            } catch (err) {
+                console.error("KaTeX error:", err);
+                return match; // Fallback: Zeige den rohen Code bei Fehlern
             }
         });
-    </script>
+
+        // Kleine Inline-Formeln \( ... \)
+        html = html.replace(/\\\(([\s\S]*?)\\\)/g, (match, equation) => {
+            try {
+                // displayMode: false für Inline-Formeln
+                return katex.renderToString(equation.trim(), { displayMode: false });
+            } catch (err) {
+                console.error("KaTeX Inline error:", err);
+                return match;
+            }
+        });
+
+        // 3. Code-Blöcke formatieren (```code```)
+        html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#1a1a1a] p-3 rounded-lg my-2 font-mono text-sm overflow-x-auto border border-[#333]">$1</pre>');
+
+        // 4. Inline-Code formatieren (`code`)
+        html = html.replace(/`([^`]+)`/g, '<code class="bg-[#1a1a1a] px-1.5 py-0.5 rounded font-mono text-sm text-blue-400">$1</code>');
+
+        // 5. Fettgedruckten Text formatieren (**text**)
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // 6. Ungeordnete Listen formatieren (* oder -)
+        // Nutze Tailwind Klassen für saubere Einrückung und Punkte
+        html = html.replace(/^(?:\*|-)\s+(.+)$/gm, '<li class="list-disc ml-5">$1</li>');
+
+        // 7. Nummerierte Listen formatieren (1.)
+        html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li class="list-decimal ml-5">$2</li>');
+
+        // 8. Zeilenumbrüche in <br> umwandeln
+        html = html.replace(/\n/g, '<br>');
+
+        return html;
+    }
+
+    // Datei-Upload-Vorschau
+    function handleFileChange() {
+        if (fileInput.files[0]) {
+            document.getElementById('file-name').textContent = fileInput.files[0].name;
+            previewContainer.style.display = 'block';
+            plusMenu.style.display = 'none';
+        }
+    }
+
+    // Datei-Upload löschen
+    function clearImage() {
+        fileInput.value = '';
+        previewContainer.style.display = 'none';
+    }
+
+    // Nachricht im Chatfenster anzeigen
+    function appendMessage(role, text, imgUrl = null) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message message-${role}`;
+        
+        // Wenn ein Bild generiert oder hochgeladen wurde, zeige es an
+        if (imgUrl) {
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            // Runde Ecken, voller Breite, automatische Höhe für saubere Darstellung
+            img.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333]';
+            msgDiv.appendChild(img);
+        }
+        
+        // Wenn Text vorhanden ist, formatiere ihn und zeige ihn an
+        if (text) {
+            const content = document.createElement('div');
+            // Formatiere AI-Antworten mit unserer formatText Funktion
+            content.innerHTML = role === 'ai' ? formatText(text) : text;
+            msgDiv.appendChild(content);
+        }
+        
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Zum Ende scrollen
+    }
+
+    // Chat-Formular absenden
+    async function handleChatSubmit(e) {
+        e.preventDefault();
+        const text = messageInput.value.trim();
+        const file = fileInput.files[0];
+        // Sende nur, wenn Text oder eine Datei vorhanden ist
+        if (!text && !file) return;
+
+        // Lokales Bild anzeigen, falls hochgeladen
+        const localImg = file ? URL.createObjectURL(file) : null;
+        appendMessage('user', text, localImg);
+        // User-Nachricht zur Historie hinzufügen
+        addToHistory("user", text);
+        
+        // Input-Felder leeren
+        messageInput.value = '';
+        clearImage();
+
+        // Ladeanimation (Lade-Welle) anzeigen
+        const thinking = document.createElement('div');
+        thinking.className = 'ai-thinking';
+        thinking.innerHTML = `
+            <div class="thinking-wave">
+                <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
+            </div>
+        `;
+        chatWindow.appendChild(thinking);
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Zum Ende scrollen
+
+        // FormData für die API-Anfrage erstellen
+        const formData = new FormData();
+        formData.append('message', text);
+        if (file) formData.append('image', file);
+        formData.append("history", JSON.stringify(chatHistory));
+        formData.append("mode", currentMode);
+        
+        try {
+            // API-Anfrage an das Backend senden
+            const res = await fetch(API_URL, { method: 'POST', body: formData });
+            const data = await res.json();
+            thinking.remove(); // Ladeanimation entfernen
+            
+            // Textantwort ermitteln
+            const aiReply = data.reply || data.response || "Antwort erhalten.";
+            
+            // --- LOGIK FÜR GENERIERTE BILDER ---
+            // Wenn das Backend eine Bild-URL mitgesendet hat (generatedImage), zeige es an
+            if (data.generatedImage) {
+                console.log("🎨 Bild generiert!");
+                // Zeige Text und Bild zusammen an
+                appendMessage('ai', aiReply, data.generatedImage);
+            } else {
+                // Nur Text anzeigen
+                appendMessage('ai', aiReply);
+            }
+            
+            // AI-Antwort zur Historie hinzufügen
+            addToHistory("assistant", aiReply);
+        } catch (err) {
+            thinking.remove(); // Ladeanimation entfernen
+            console.error("API Error:", err);
+            appendMessage('ai', "Netzwerkfehler. Bitte versuche es später noch einmal.");
+        }
+    }
+
+    // Scrollen zum Ende beim Resize (z.B. Tastatur auf Mobilgeräten)
+    window.addEventListener('resize', () => {
+        if (document.activeElement.tagName === 'INPUT') {
+            setTimeout(() => {
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }, 50);
+        }
+    });
+</script>
 </body>
 </html>
