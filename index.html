@@ -396,13 +396,12 @@
         </div>
     </div>
 
-   <script>
+<script>
     const chatWindow = document.getElementById('chat-window');
     const messageInput = document.getElementById('message-input');
     const fileInput = document.getElementById('file-input');
     const previewContainer = document.getElementById('image-preview-container');
     const navDropdown = document.getElementById('nav-dropdown');
-    const plusMenu = document.getElementById('plus-menu');
     
     // Globale Variablen für Chat-Verlauf und Modus
     let chatHistory = [];
@@ -486,18 +485,16 @@
         // Große, freistehende Formeln \[ ... \]
         html = html.replace(/\\\[([\s\S]*?)\\\]/g, (match, equation) => {
             try {
-                // displayMode: true für freistehende, zentrierte Formeln
                 return '<div class="my-3 text-center overflow-x-auto w-full">' + katex.renderToString(equation.trim(), { displayMode: true }) + '</div>';
             } catch (err) {
                 console.error("KaTeX error:", err);
-                return match; // Fallback: Zeige den rohen Code bei Fehlern
+                return match;
             }
         });
 
         // Kleine Inline-Formeln \( ... \)
         html = html.replace(/\\\(([\s\S]*?)\\\)/g, (match, equation) => {
             try {
-                // displayMode: false für Inline-Formeln
                 return katex.renderToString(equation.trim(), { displayMode: false });
             } catch (err) {
                 console.error("KaTeX Inline error:", err);
@@ -515,7 +512,6 @@
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
         // 6. Ungeordnete Listen formatieren (* oder -)
-        // Nutze Tailwind Klassen für saubere Einrückung und Punkte
         html = html.replace(/^(?:\*|-)\s+(.+)$/gm, '<li class="list-disc ml-5">$1</li>');
 
         // 7. Nummerierte Listen formatieren (1.)
@@ -551,7 +547,6 @@
         if (imgUrl) {
             const img = document.createElement('img');
             img.src = imgUrl;
-            // Runde Ecken, voller Breite, automatische Höhe für saubere Darstellung
             img.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333]';
             msgDiv.appendChild(img);
         }
@@ -559,13 +554,12 @@
         // Wenn Text vorhanden ist, formatiere ihn und zeige ihn an
         if (text) {
             const content = document.createElement('div');
-            // Formatiere AI-Antworten mit unserer formatText Funktion
             content.innerHTML = role === 'ai' ? formatText(text) : text;
             msgDiv.appendChild(content);
         }
         
         chatWindow.appendChild(msgDiv);
-        chatWindow.scrollTop = chatWindow.scrollHeight; // Zum Ende scrollen
+        chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
     // Chat-Formular absenden
@@ -573,20 +567,15 @@
         e.preventDefault();
         const text = messageInput.value.trim();
         const file = fileInput.files[0];
-        // Sende nur, wenn Text oder eine Datei vorhanden ist
         if (!text && !file) return;
 
-        // Lokales Bild anzeigen, falls hochgeladen
         const localImg = file ? URL.createObjectURL(file) : null;
         appendMessage('user', text, localImg);
-        // User-Nachricht zur Historie hinzufügen
         addToHistory("user", text);
         
-        // Input-Felder leeren
         messageInput.value = '';
         clearImage();
 
-        // Ladeanimation (Lade-Welle) anzeigen
         const thinking = document.createElement('div');
         thinking.className = 'ai-thinking';
         thinking.innerHTML = `
@@ -595,16 +584,15 @@
             </div>
         `;
         chatWindow.appendChild(thinking);
-        chatWindow.scrollTop = chatWindow.scrollHeight; // Zum Ende scrollen
+        chatWindow.scrollTop = chatWindow.scrollHeight;
 
-        // FormData für die API-Anfrage erstellen
         const formData = new FormData();
         formData.append('message', text);
         if (file) formData.append('image', file);
         formData.append("history", JSON.stringify(chatHistory));
         formData.append("mode", currentMode);
         
-       try {
+        try {
             console.log("📤 Sende Anfrage an Backend...");
             const res = await fetch(API_URL, { method: 'POST', body: formData });
             const data = await res.json();
@@ -614,7 +602,6 @@
             
             const aiReply = data.reply || data.response || "Antwort erhalten.";
             
-            // PRÜFUNG: Was hat das Backend geschickt?
             if (data.triggerFrontendImage) {
                 console.log("🎨 Frontend-Bildgenerierung getriggert! Prompt:", data.prompt);
                 appendMessage('ai', aiReply);
@@ -630,7 +617,7 @@
                     console.log("🚀 Starte Fetch zu Hugging Face...");
                     const response = await fetch(hfUrl, {
                         headers: { 
-                            "Authorization": "Bearer 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", // <--- HIER DEINEN ECHTEN KEY REINPACKEN (mit hf_...)
+                            "Authorization": "Bearer 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",
                             "Content-Type": "application/json"
                         },
                         method: "POST",
@@ -668,8 +655,9 @@
             console.error("❌ Allgemeiner API Fehler:", err);
             appendMessage('ai', "Netzwerkfehler. Bitte versuche es später noch einmal.");
         }
+    } // <--- DIESE KLAMMER HAT GEFEHLT!
 
-    // Scrollen zum Ende beim Resize (z.B. Tastatur auf Mobilgeräten)
+    // Scrollen zum Ende beim Resize
     window.addEventListener('resize', () => {
         if (document.activeElement.tagName === 'INPUT') {
             setTimeout(() => {
