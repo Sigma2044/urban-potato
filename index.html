@@ -445,18 +445,21 @@
         plusMenu.style.display = 'none';
     };
 
-    // Plus-Menü-Toggle (Bild hochladen)
-    function togglePlusMenu(e) {
-        e.stopPropagation();
-        plusMenu.style.display = plusMenu.style.display === 'flex' ? 'none' : 'flex';
-        navDropdown.style.display = 'none';
+   function togglePlusMenu(event) {
+    if (event) event.stopPropagation(); // Verhindert, dass das Menü sofort wieder schließt
+    const menu = document.getElementById('plus-menu');
+    if (menu.style.display === 'none' || menu.style.display === '') {
+        menu.style.display = 'block';
+    } else {
+        menu.style.display = 'none';
     }
+}
 
-    // Menüs schließen, wenn man außerhalb klickt
-    document.onclick = () => {
-        navDropdown.style.display = 'none';
-        plusMenu.style.display = 'none';
-    };
+// Schließt das Menü automatisch, wenn man irgendwo anders hinklickt
+document.addEventListener('click', () => {
+    const menu = document.getElementById('plus-menu');
+    if (menu) menu.style.display = 'none';
+});
 
     // View-Umschaltung (Chat, Features)
     function switchView(view) {
