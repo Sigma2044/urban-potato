@@ -192,6 +192,7 @@
             padding: 0.5rem 1rem 1.25rem 1rem;
             background: var(--bg-color);
             position: relative;
+            z-index: 50; /* Sorgt dafür, dass das Feld immer im Vordergrund ist */
         }
 
         .input-wrapper {
@@ -202,6 +203,7 @@
             align-items: center;
             padding: 0.3rem 0.5rem;
             position: relative;
+            z-index: 51;
         }
 
         #message-input {
@@ -213,6 +215,9 @@
             outline: none;
             font-size: 1rem;
             min-width: 0;
+            display: block !important; /* Erzwingt die Anzeige */
+            position: relative;
+            z-index: 52;
         }
 
         .icon-btn {
