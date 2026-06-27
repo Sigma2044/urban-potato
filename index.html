@@ -604,34 +604,70 @@
         formData.append("history", JSON.stringify(chatHistory));
         formData.append("mode", currentMode);
         
-        try {
-            // API-Anfrage an das Backend senden
+       try {
+            console.log("📤 Sende Anfrage an Backend...");
             const res = await fetch(API_URL, { method: 'POST', body: formData });
             const data = await res.json();
-            thinking.remove(); // Ladeanimation entfernen
+            console.log("📥 Antwort vom Backend empfangen:", data);
             
-            // Textantwort ermitteln
+            thinking.remove();
+            
             const aiReply = data.reply || data.response || "Antwort erhalten.";
             
-            // --- LOGIK FÜR GENERIERTE BILDER ---
-            // Wenn das Backend eine Bild-URL mitgesendet hat (generatedImage), zeige es an
-            if (data.generatedImage) {
-                console.log("🎨 Bild generiert!");
-                // Zeige Text und Bild zusammen an
+            // PRÜFUNG: Was hat das Backend geschickt?
+            if (data.triggerFrontendImage) {
+                console.log("🎨 Frontend-Bildgenerierung getriggert! Prompt:", data.prompt);
+                appendMessage('ai', aiReply);
+                
+                const hfUrl = `https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell`;
+                
+                const imgLoadingDiv = document.createElement('div');
+                imgLoadingDiv.className = 'message message-ai text-gray-400 italic';
+                imgLoadingDiv.textContent = '🎨 Bild wird gerendert...';
+                chatWindow.appendChild(imgLoadingDiv);
+                
+                try {
+                    console.log("🚀 Starte Fetch zu Hugging Face...");
+                    const response = await fetch(hfUrl, {
+                        headers: { 
+                            "Authorization": "Bearer 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", // <--- HIER DEINEN ECHTEN KEY REINPACKEN (mit hf_...)
+                            "Content-Type": "application/json"
+                        },
+                        method: "POST",
+                        body: JSON.stringify({ inputs: data.prompt }),
+                    });
+                    
+                    console.log("📡 Hugging Face antwortet mit Status:", response.status);
+                    imgLoadingDiv.remove();
+                    
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const objectURL = URL.createObjectURL(blob);
+                        console.log("✅ Bild erfolgreich geladen, zeige es an.");
+                        appendMessage('ai', 'Fertig!', objectURL);
+                    } else {
+                        const errText = await response.text();
+                        console.error("❌ HF API Fehler Text:", errText);
+                        appendMessage('ai', 'Fehler beim Laden des Bildes von Hugging Face.');
+                    }
+                } catch (imgErr) {
+                    imgLoadingDiv.remove();
+                    console.error("❌ Netzwerkfehler bei HF Fetch:", imgErr);
+                    appendMessage('ai', 'Netzwerkfehler im Browser beim Laden des Bildes.');
+                }
+                
+            } else if (data.generatedImage) {
                 appendMessage('ai', aiReply, data.generatedImage);
             } else {
-                // Nur Text anzeigen
                 appendMessage('ai', aiReply);
             }
             
-            // AI-Antwort zur Historie hinzufügen
             addToHistory("assistant", aiReply);
         } catch (err) {
-            thinking.remove(); // Ladeanimation entfernen
-            console.error("API Error:", err);
+            thinking.remove();
+            console.error("❌ Allgemeiner API Fehler:", err);
             appendMessage('ai', "Netzwerkfehler. Bitte versuche es später noch einmal.");
         }
-    }
 
     // Scrollen zum Ende beim Resize (z.B. Tastatur auf Mobilgeräten)
     window.addEventListener('resize', () => {
