@@ -592,7 +592,7 @@
         formData.append("history", JSON.stringify(chatHistory));
         formData.append("mode", currentMode);
         
-        try {
+       try {
             console.log("📤 Sende Anfrage an Backend...");
             const res = await fetch(API_URL, { method: 'POST', body: formData });
             const data = await res.json();
@@ -602,48 +602,9 @@
             
             const aiReply = data.reply || data.response || "Antwort erhalten.";
             
-            if (data.triggerFrontendImage) {
-                console.log("🎨 Frontend-Bildgenerierung getriggert! Prompt:", data.prompt);
-                appendMessage('ai', aiReply);
-                
-                const hfUrl = `https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell`;
-                
-                const imgLoadingDiv = document.createElement('div');
-                imgLoadingDiv.className = 'message message-ai text-gray-400 italic';
-                imgLoadingDiv.textContent = '🎨 Bild wird gerendert...';
-                chatWindow.appendChild(imgLoadingDiv);
-                
-                try {
-                    console.log("🚀 Starte Fetch zu Hugging Face...");
-                    const response = await fetch(hfUrl, {
-                        headers: { 
-                            "Authorization": "Bearer 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",
-                            "Content-Type": "application/json"
-                        },
-                        method: "POST",
-                        body: JSON.stringify({ inputs: data.prompt }),
-                    });
-                    
-                    console.log("📡 Hugging Face antwortet mit Status:", response.status);
-                    imgLoadingDiv.remove();
-                    
-                    if (response.ok) {
-                        const blob = await response.blob();
-                        const objectURL = URL.createObjectURL(blob);
-                        console.log("✅ Bild erfolgreich geladen, zeige es an.");
-                        appendMessage('ai', 'Fertig!', objectURL);
-                    } else {
-                        const errText = await response.text();
-                        console.error("❌ HF API Fehler Text:", errText);
-                        appendMessage('ai', 'Fehler beim Laden des Bildes von Hugging Face.');
-                    }
-                } catch (imgErr) {
-                    imgLoadingDiv.remove();
-                    console.error("❌ Netzwerkfehler bei HF Fetch:", imgErr);
-                    appendMessage('ai', 'Netzwerkfehler im Browser beim Laden des Bildes.');
-                }
-                
-            } else if (data.generatedImage) {
+            // Wenn das Backend ein Bild mitschickt, wird es direkt angezeigt
+            if (data.generatedImage) {
+                console.log("✅ Bild vom Backend erhalten. Zeige es an...");
                 appendMessage('ai', aiReply, data.generatedImage);
             } else {
                 appendMessage('ai', aiReply);
@@ -655,8 +616,7 @@
             console.error("❌ Allgemeiner API Fehler:", err);
             appendMessage('ai', "Netzwerkfehler. Bitte versuche es später noch einmal.");
         }
-    } // <--- DIESE KLAMMER HAT GEFEHLT!
-
+    } // Klammer für handleChatSubmit Ende
     // Scrollen zum Ende beim Resize
     window.addEventListener('resize', () => {
         if (document.activeElement.tagName === 'INPUT') {
