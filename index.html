@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>eduai - Smart Learning</title>
+    <title>eduai - Smart Learnin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -308,8 +308,7 @@
     </style>
 </head>
 <body>
-
-    <div class="app-container">
+<div class="app-container">
         <header class="top-header">
             <div class="logo-container">
                 <button class="icon-btn" id="menu-toggle-btn" aria-label="Menü">
@@ -334,16 +333,14 @@
 
         <div id="chat-view" class="view active">
             <div id="model-switcher" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-300">
-    <button id="flash-mode-btn" onclick="setMode('flash')" 
-        class="px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a]">
-        ⚡ Flash
-    </button>
+                <button id="flash-mode-btn" onclick="setMode('flash')" class="px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a]">
+                    ⚡ Flash
+                </button>
+                <button id="codex-mode-btn" onclick="setMode('codex')" class="px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a]">
+                    💻 Codex
+                </button>
+            </div>
 
-    <button id="codex-mode-btn" onclick="setMode('codex')" 
-        class="px-3 py-1 rounded-lg border border-[#333] bg-[#1a1a1a]">
-        💻 Codex
-    </button>
-</div>
             <div id="chat-window">
                 <div class="message message-ai welcome-msg">
                     Hey! Ich bin <strong>EduAI</strong>. Ich helfe dir beim Lernen, Planen und Verstehen. Frag mich einfach alles!
@@ -372,6 +369,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                     </button>
 
+                    <button type="button" id="mic-btn" class="icon-btn" style="color: #a3a3a3; margin-right: 4px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                    </button>
+
                     <input type="text" id="message-input" placeholder="Nachricht an EduAI..." autocomplete="off">
 
                     <button type="submit" id="send-btn" class="icon-btn" style="color: var(--accent)">
@@ -395,7 +396,6 @@
             </div>
         </div>
     </div>
-
 <script>
     const chatWindow = document.getElementById('chat-window');
     const messageInput = document.getElementById('message-input');
