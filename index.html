@@ -41,12 +41,12 @@
             width: 100%;
         }
 
-        .top-header {
-            position: absolute;
+       .top-header {
+            position: fixed; /* Auf fixed ändern, damit er sich am gesamten Bildschirm orientiert */
             top: 0;
             left: 0;
             right: 0;
-            padding: 0.5rem 1rem; /* Leicht reduzierter Abstand oben/unten für mehr Platz */
+            padding: 0.75rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -78,7 +78,7 @@
             -webkit-text-fill-color: transparent;
         }
         .nav-dropdown {
-            position: absolute;
+            position: fixed; /* Auch hier auf fixed ändern */
             top: 3.5rem;
             left: 1rem;
             background: #1f1f1f;
@@ -90,6 +90,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             overflow: hidden;
             animation: fadeIn 0.2s ease-out;
+            z-index: 101; /* Ein Tick höher als der Header */
         }
 
         .nav-item {
