@@ -431,15 +431,19 @@
             document.getElementById('file-name').textContent = file.name;
             previewContainer.style.display = 'block';
 
-            // Wenn es eine TXT-Datei ist, lesen wir den Inhalt direkt aus
             if (file.name.endsWith('.txt')) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     uploadedTextContent = e.target.result;
                 };
                 reader.readAsText(file);
+            } else if (file.name.endsWith('.pdf')) {
+                uploadedTextContent = "";
+                // Hinweis: PDF wird als Datei ans Backend gesendet. 
+                // Wenn dein Backend noch keine PDFs lesen kann, aktiviere die Zeile darunter für eine Warnung:
+                // alert("PDFs werden bald unterstützt! Bitte nutze aktuell .txt oder Bilder.");
             } else {
-                uploadedTextContent = ""; // Zurücksetzen bei Bildern oder PDFs
+                uploadedTextContent = ""; // Reset für Bilder
             }
         }
     }
