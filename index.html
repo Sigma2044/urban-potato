@@ -452,26 +452,61 @@
         previewContainer.style.display = 'none';
     }
 
-    function appendMessage(role, text, imgUrl = null) {
-        const msgDiv = document.createElement('div');
-        msgDiv.className = `message message-${role}`;
-        
-        if (imgUrl) {
-            const img = document.createElement('img');
-            img.src = imgUrl;
-            img.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333]';
-            msgDiv.appendChild(img);
-        }
-        
-        if (text) {
-            const content = document.createElement('div');
-            content.innerHTML = role === 'ai' ? formatText(text) : text;
-            msgDiv.appendChild(content);
-        }
-        
-        chatWindow.appendChild(msgDiv);
-        chatWindow.scrollTop = chatWindow.scrollHeight;
+   function appendMessage(role, text, imgUrl = null) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message message-${role} flex flex-col relative group`; // 'group' hilft uns, den Button elegant einzublenden
+    
+    if (imgUrl) {
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333]';
+        msgDiv.appendChild(img);
     }
+    
+    if (text) {
+        const content = document.createElement('div');
+        content.innerHTML = role === 'ai' ? formatText(text) : text;
+        msgDiv.appendChild(content);
+
+        // 🔥 NEU: Kopieren-Button nur für KI-Nachrichten hinzufügen
+        if (role === 'ai') {
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn mt-2 text-xs text-gray-400 hover:text-white flex items-center gap-1 self-end transition-colors';
+            copyBtn.title = 'Text kopieren';
+            copyBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                </svg>
+                <span>Kopieren</span>
+            `;
+
+            // Klick-Event fürs Kopieren
+            copyBtn.onclick = async () => {
+                try {
+                    // Wir kopieren den reinen Text ohne HTML-Tags
+                    await navigator.clipboard.writeText(content.innerText);
+                    
+                    // Visuelles Feedback
+                    copyBtn.querySelector('span').textContent = 'Kopiert!';
+                    copyBtn.classList.add('text-green-400');
+                    
+                    // Nach 2 Sekunden wieder zurücksetzen
+                    setTimeout(() => {
+                        copyBtn.querySelector('span').textContent = 'Kopieren';
+                        copyBtn.classList.remove('text-green-400');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Fehler beim Kopieren:', err);
+                }
+            };
+            
+            msgDiv.appendChild(copyBtn);
+        }
+    }
+    
+    chatWindow.appendChild(msgDiv);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+}
 
 async function handleChatSubmit(e) {
         e.preventDefault();
