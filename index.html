@@ -474,21 +474,29 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
- async function handleChatSubmit(e) {
+async function handleChatSubmit(e) {
         e.preventDefault();
-        const text = messageInput.value.trim();
+        let text = messageInput.value.trim();
         const file = fileInput.files[0];
         if (!text && !file) return;
 
+        // --- NEU: Wenn eine .txt-Datei eingelesen wurde, hängen wir ihren Inhalt an den Text an ---
+        if (file && file.name.endsWith('.txt') && typeof uploadedTextContent !== 'undefined' && uploadedTextContent) {
+            text = `[Inhalt der hochgeladenen Datei "${file.name}":]\n${uploadedTextContent}\n[Ende der Datei]\n\n${text || "Fasse die Datei zusammen."}`;
+        }
+
         const localImg = file ? URL.createObjectURL(file) : null;
-        appendMessage('user', text, localImg);
+        appendMessage('user', messageInput.value.trim() || (file ? file.name : ""), localImg);
         chatHistory.push({ role: "user", content: text });
         
         messageInput.value = '';
         clearImage();
+        // Hier wird die Variable für die nächste Datei wieder geleert
+        if (typeof uploadedTextContent !== 'undefined') uploadedTextContent = "";
 
         const thinking = document.createElement('div');
         thinking.className = 'ai-thinking';
+        // ... ab hier bleibt der Rest der Funktion (Anfrage senden, fetch, etc.) exakt gleich ...
         thinking.innerHTML = `
             <div class="thinking-wave">
                 <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
