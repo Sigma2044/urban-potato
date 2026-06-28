@@ -69,22 +69,14 @@
         }
         /* Sorgt dafür, dass das Känguru-Logo im Header perfekt skaliert wird */
        /* Vergrößert das Känguru-Logo, damit es perfekt lesbar ist */
-        #logo-wrapper img {
-            height: 55px; /* Höher eingestellt, da das Bild quadratisch ist */
-            width: auto;
-            display: block;
-            object-fit: contain;
-            margin-top: -4px; /* Schiebt es leicht nach oben, falls es am Rand kratzt */
-        }
         .logo-fallback {
             font-weight: 800;
-            font-size: 1.25rem;
+            font-size: 1.35rem; /* Etwas größer, damit es gut lesbar ist */
             letter-spacing: -0.02em;
-            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            background: linear-gradient(90deg, #ff3333, #ff6666); /* Schickes Kano-Rot */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
         .nav-dropdown {
             position: absolute;
             top: 3.5rem;
@@ -293,9 +285,9 @@
                 <button class="icon-btn" id="menu-toggle-btn" aria-label="Menü">
                     <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
-                  <div id="logo-wrapper" class="flex items-center gap-2">
-                   <img src="kanoai-logo.png" alt="KanoAI Logo" class="h-10 w-auto object-contain" onerror="handleLogoError()">
-                </div>
+                  <div id="logo-wrapper">
+                   <span class="logo-fallback">KanoAI</span>
+               </div>
             </div>
             
             <div id="nav-dropdown" class="nav-dropdown">
