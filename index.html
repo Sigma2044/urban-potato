@@ -474,7 +474,7 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    async function handleChatSubmit(e) {
+ async function handleChatSubmit(e) {
         e.preventDefault();
         const text = messageInput.value.trim();
         const file = fileInput.files[0];
@@ -498,7 +498,8 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         const formData = new FormData();
-        formData.append('message', textToSendToBackend);
+        // FIX: 'text' statt 'textToSendToBackend' nutzen!
+        formData.append('message', text);
         
         // Schickt die Datei ans Backend, wenn ein Bild oder eine PDF ausgewählt wurde
         if (file) {
@@ -506,9 +507,6 @@
                 formData.append('image', file);
             }
         }
-        
-        formData.append("history", JSON.stringify(chatHistory));
-        formData.append("mode", "flash");
         
         formData.append("history", JSON.stringify(chatHistory));
         formData.append("mode", "flash");
