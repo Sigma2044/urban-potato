@@ -46,7 +46,7 @@
             top: 0;
             left: 0;
             right: 0;
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 1rem; /* Leicht reduzierter Abstand oben/unten für mehr Platz */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -55,7 +55,6 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-
         .logo-container {
             display: flex;
             align-items: center;
@@ -69,11 +68,13 @@
             display: block;
         }
         /* Sorgt dafür, dass das Känguru-Logo im Header perfekt skaliert wird */
+       /* Vergrößert das Känguru-Logo, damit es perfekt lesbar ist */
         #logo-wrapper img {
-            height: 32px; /* Setzt eine harmonische Höhe für die Navigationsleiste */
+            height: 55px; /* Höher eingestellt, da das Bild quadratisch ist */
             width: auto;
             display: block;
             object-fit: contain;
+            margin-top: -4px; /* Schiebt es leicht nach oben, falls es am Rand kratzt */
         }
         .logo-fallback {
             font-weight: 800;
