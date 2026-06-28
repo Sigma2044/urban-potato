@@ -498,10 +498,16 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         const formData = new FormData();
-        formData.append('message', text);
-        if (file) formData.append('image', file);
+        formData.append('message', textToSendToBackend);
+        
+        // PDFs und Bilder werden als Datei an das Feld 'image' gehängt,
+        // da dein Backend dort mit upload.single("image") darauf wartet!
+        if (file && (file.mimetype?.startsWith('image/') || file.name.endsWith('.png') || file.name.endsWith('.jpg') || file.name.endsWith('.jpeg') || file.name.endsWith('.pdf'))) {
+            formData.append('image', file);
+        }
+        
         formData.append("history", JSON.stringify(chatHistory));
-        formData.append("mode", "flash"); // Standardmäßig Flash als Fallback mitsenden
+        formData.append("mode", "flash");
         
         try {
             console.log("📤 Sende Anfrage an Backend...");
