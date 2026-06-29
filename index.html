@@ -308,7 +308,7 @@
 
             <div id="chat-window">
                 <div class="message message-ai welcome-msg">
-                    Hey! Ich bin <strong>KanoAI</strong>. Starte eine Konversatzion indem du Text eingibst oder ein Bild hochlädst.
+                    Hey! Ich bin <strong>KanoAI</strong>. Starte eine Konversation, indem du Text eingibst, nach einem Bild verlangst, oder mit `/video [Beschreibung]` ein Video generierst.
                 </div>
             </div>
 
@@ -338,7 +338,8 @@
                     </button>
                 </form>
             </div>
-        </div> <div id="features-view" class="view p-6 pt-24 overflow-y-auto">
+        </div> 
+        <div id="features-view" class="view p-6 pt-24 overflow-y-auto">
             <h1 class="text-2xl font-bold mb-4">EduAI Features</h1>
             <div class="space-y-4">
                 <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
@@ -348,6 +349,10 @@
                 <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
                     <h3 class="text-blue-400 font-bold">📚 Lernpläne</h3>
                     <p class="text-sm text-gray-400 mt-1">Lass dir individuelle Pläne für Prüfungen erstellen.</p>
+                </div>
+                <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
+                    <h3 class="text-blue-400 font-bold">🎬 Video-Generierung</h3>
+                    <p class="text-sm text-gray-400 mt-1">Nutze `/video [beschreibung]` um kurze, cinematische Clips per Alibaba-KI erzeugen zu lassen.</p>
                 </div>
             </div>
         </div>
@@ -439,11 +444,8 @@
                 reader.readAsText(file);
             } else if (file.name.endsWith('.pdf')) {
                 uploadedTextContent = "";
-                // Hinweis: PDF wird als Datei ans Backend gesendet. 
-                // Wenn dein Backend noch keine PDFs lesen kann, aktiviere die Zeile darunter für eine Warnung:
-                // alert("PDFs werden bald unterstützt! Bitte nutze aktuell .txt oder Bilder.");
             } else {
-                uploadedTextContent = ""; // Reset für Bilder
+                uploadedTextContent = "";
             }
         }
     }
@@ -453,15 +455,26 @@
         previewContainer.style.display = 'none';
     }
 
-   function appendMessage(role, text, imgUrl = null) {
+   function appendMessage(role, text, imgUrl = null, videoUrl = null) {
     const msgDiv = document.createElement('div');
-    msgDiv.className = `message message-${role} flex flex-col relative group`; // 'group' hilft uns, den Button elegant einzublenden
+    msgDiv.className = `message message-${role} flex flex-col relative group`;
     
+    // 1. Wenn ein Bild vorhanden ist (User-Upload oder Pollinations AI)
     if (imgUrl) {
         const img = document.createElement('img');
         img.src = imgUrl;
         img.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333]';
         msgDiv.appendChild(img);
+    }
+
+    // 🔥 NEU: Wenn ein Video vorhanden ist (Aus dem Backend von Alibaba CogVideoX)
+    if (videoUrl) {
+        const video = document.createElement('video');
+        video.src = videoUrl;
+        video.controls = true;
+        video.playsInline = true;
+        video.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333] bg-black';
+        msgDiv.appendChild(video);
     }
     
     if (text) {
@@ -469,7 +482,7 @@
         content.innerHTML = role === 'ai' ? formatText(text) : text;
         msgDiv.appendChild(content);
 
-        // 🔥 NEU: Kopieren-Button nur für KI-Nachrichten hinzufügen
+        // Kopieren-Button nur für KI-Nachrichten hinzufügen
         if (role === 'ai') {
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-btn mt-2 text-xs text-gray-400 hover:text-white flex items-center gap-1 self-end transition-colors';
@@ -481,17 +494,12 @@
                 <span>Kopieren</span>
             `;
 
-            // Klick-Event fürs Kopieren
             copyBtn.onclick = async () => {
                 try {
-                    // Wir kopieren den reinen Text ohne HTML-Tags
                     await navigator.clipboard.writeText(content.innerText);
-                    
-                    // Visuelles Feedback
                     copyBtn.querySelector('span').textContent = 'Kopiert!';
                     copyBtn.classList.add('text-green-400');
                     
-                    // Nach 2 Sekunden wieder zurücksetzen
                     setTimeout(() => {
                         copyBtn.querySelector('span').textContent = 'Kopieren';
                         copyBtn.classList.remove('text-green-400');
@@ -515,7 +523,6 @@ async function handleChatSubmit(e) {
         const file = fileInput.files[0];
         if (!text && !file) return;
 
-        // --- NEU: Wenn eine .txt-Datei eingelesen wurde, hängen wir ihren Inhalt an den Text an ---
         if (file && file.name.endsWith('.txt') && typeof uploadedTextContent !== 'undefined' && uploadedTextContent) {
             text = `[Inhalt der hochgeladenen Datei "${file.name}":]\n${uploadedTextContent}\n[Ende der Datei]\n\n${text || "Fasse die Datei zusammen."}`;
         }
@@ -526,12 +533,10 @@ async function handleChatSubmit(e) {
         
         messageInput.value = '';
         clearImage();
-        // Hier wird die Variable für die nächste Datei wieder geleert
         if (typeof uploadedTextContent !== 'undefined') uploadedTextContent = "";
 
         const thinking = document.createElement('div');
         thinking.className = 'ai-thinking';
-        // ... ab hier bleibt der Rest der Funktion (Anfrage senden, fetch, etc.) exakt gleich ...
         thinking.innerHTML = `
             <div class="thinking-wave">
                 <div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div>
@@ -541,10 +546,8 @@ async function handleChatSubmit(e) {
         chatWindow.scrollTop = chatWindow.scrollHeight;
 
         const formData = new FormData();
-        // FIX: 'text' statt 'textToSendToBackend' nutzen!
         formData.append('message', text);
         
-        // Schickt die Datei ans Backend, wenn ein Bild oder eine PDF ausgewählt wurde
         if (file) {
             if (file.name.endsWith('.pdf') || file.name.endsWith('.png') || file.name.endsWith('.jpg') || file.name.endsWith('.jpeg') || file.type?.startsWith('image/')) {
                 formData.append('image', file);
@@ -563,8 +566,11 @@ async function handleChatSubmit(e) {
             
             const aiReply = data.reply || data.response || "Antwort erhalten.";
             
-            if (data.generatedImage) {
-                appendMessage('ai', aiReply, data.generatedImage);
+            // 🔥 NEU: Prüfen, ob das Backend ein Bild ODER ein Video geliefert hat
+            if (data.generatedVideo) {
+                appendMessage('ai', aiReply, null, data.generatedVideo);
+            } else if (data.generatedImage) {
+                appendMessage('ai', aiReply, data.generatedImage, null);
             } else {
                 appendMessage('ai', aiReply);
             }
@@ -573,7 +579,7 @@ async function handleChatSubmit(e) {
         } catch (err) {
             thinking.remove();
             console.error("❌ Allgemeiner API Fehler:", err);
-            appendMessage('ai', "Netzwerkfehler. Bitte versuche es später noch einmal.");
+            appendMessage('ai', "Netzwerkfehler oder Server-Timeout. Die Video-KI braucht manchmal etwas länger.");
         }
     }
 
