@@ -365,8 +365,15 @@
     const previewContainer = document.getElementById('image-preview-container');
     const navDropdown = document.getElementById('nav-dropdown');
     
+    // 🔥 NEU: Variablen für die Audio-Aufnahme
+    const micBtn = document.getElementById('mic-btn');
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    
     let chatHistory = [];
     const API_URL = 'https://eduai-5b85.onrender.com/chat';
+    const TRANSCRIBE_URL = 'https://eduai-5b85.onrender.com/transcribe'; // Transkriptions-Endpunkt
 
     function handleLogoError() {
         const wrapper = document.getElementById('logo-wrapper');
@@ -459,7 +466,6 @@
     const msgDiv = document.createElement('div');
     msgDiv.className = `message message-${role} flex flex-col relative group`;
     
-    // 1. Wenn ein Bild vorhanden ist (User-Upload oder Pollinations AI)
     if (imgUrl) {
         const img = document.createElement('img');
         img.src = imgUrl;
@@ -467,7 +473,6 @@
         msgDiv.appendChild(img);
     }
 
-    // 🔥 NEU: Wenn ein Video vorhanden ist (Aus dem Backend von Alibaba CogVideoX)
     if (videoUrl) {
         const video = document.createElement('video');
         video.src = videoUrl;
@@ -482,7 +487,6 @@
         content.innerHTML = role === 'ai' ? formatText(text) : text;
         msgDiv.appendChild(content);
 
-        // Kopieren-Button nur für KI-Nachrichten hinzufügen
         if (role === 'ai') {
             const copyBtn = document.createElement('button');
             copyBtn.className = 'copy-btn mt-2 text-xs text-gray-400 hover:text-white flex items-center gap-1 self-end transition-colors';
@@ -518,7 +522,7 @@
 }
 
 async function handleChatSubmit(e) {
-        e.preventDefault();
+        if (e) e.preventDefault();
         let text = messageInput.value.trim();
         const file = fileInput.files[0];
         if (!text && !file) return;
@@ -566,7 +570,6 @@ async function handleChatSubmit(e) {
             
             const aiReply = data.reply || data.response || "Antwort erhalten.";
             
-            // 🔥 NEU: Prüfen, ob das Backend ein Bild ODER ein Video geliefert hat
             if (data.generatedVideo) {
                 appendMessage('ai', aiReply, null, data.generatedVideo);
             } else if (data.generatedImage) {
@@ -583,6 +586,69 @@ async function handleChatSubmit(e) {
         }
     }
 
+    // 🔥 NEU: Audioaufnahme-Logik für das Mikrofon
+    micBtn.onclick = async () => {
+        if (!isRecording) {
+            // Aufnahme starten
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = async () => {
+                    // Mikrofon-Stream beenden, damit das Browsersymbol verschwindet
+                    stream.getTracks().forEach(track => track.stop());
+
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    
+                    // Visuellen Ladezustand im Input anzeigen
+                    messageInput.placeholder = "Übersetze Sprache in Text...";
+                    micBtn.style.color = '#a3a3a3';
+
+                    const audioFormData = new FormData();
+                    audioFormData.append('audio', audioBlob, 'voice.wav');
+
+                    try {
+                        console.log("🎙️ Sende Audiodatei zur Transkription...");
+                        const response = await fetch(TRANSCRIBE_URL, { method: 'POST', body: audioFormData });
+                        const data = await response.json();
+
+                        if (data.text && data.text.trim()) {
+                            messageInput.value = data.text;
+                            // Automatisches Absenden des erkannten Textes
+                            handleChatSubmit();
+                        } else {
+                            alert("Es konnte keine Sprache erkannt werden.");
+                        }
+                    } catch (err) {
+                        console.error("❌ Fehler beim Senden des Audios:", err);
+                        alert("Verbindung zum Sprachserver fehlgeschlagen.");
+                    } finally {
+                        messageInput.placeholder = "Nachricht an KanoAI...";
+                    }
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                micBtn.style.color = '#ef4444'; // Ändert die Buttonfarbe auf Kano-Rot während der Aufnahme
+                messageInput.placeholder = "🎙️ Ich höre zu... (Erneut drücken zum Stoppen)";
+            } catch (err) {
+                console.error("Mikrofonzugriff verweigert:", err);
+                alert("Bitte erlaube den Zugriff auf dein Mikrofon.");
+            }
+        } else {
+            // Aufnahme stoppen
+            if (mediaRecorder && mediaRecorder.state !== "inactive") {
+                mediaRecorder.stop();
+            }
+            isRecording = false;
+        }
+    };
+
     window.addEventListener('resize', () => {
         if (document.activeElement.tagName === 'INPUT') {
             setTimeout(() => {
@@ -590,6 +656,5 @@ async function handleChatSubmit(e) {
             }, 50);
         }
     });
-</script>
-</body>
+</script></body>
 </html>
