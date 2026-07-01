@@ -499,11 +499,26 @@
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
-    let currentRecordBtn = null; // Tracks which microphone button initiated recording
+    let currentRecordBtn = null; 
     
-    let chatHistory = [];
+    // 💾 CHAT-HISTORY AUS LOCALSTORAGE LADEN
+    let chatHistory = JSON.parse(localStorage.getItem('kanoai_chat_history')) || [];
     const API_URL = 'https://eduai-5b85.onrender.com/chat';
     const TRANSCRIBE_URL = 'https://eduai-5b85.onrender.com/transcribe';
+
+    // beim Starten direkt alte Nachrichten laden, falls vorhanden
+    window.addEventListener('DOMContentLoaded', () => {
+        if (chatHistory.length > 0) {
+            // Willkommensnachricht leeren, um Platz für alten Chat zu machen (optional)
+            chatWindow.innerHTML = ''; 
+            
+            chatHistory.forEach(msg => {
+                // Unterscheidung: Das UI braucht 'user'/'ai', die History nutzt 'user'/'assistant'
+                const displayRole = msg.role === 'assistant' ? 'ai' : 'user';
+                appendMessage(displayRole, msg.content);
+            });
+        }
+    });
 
     // Sidebar Toggling on Mobile
     menuToggleBtn.onclick = (e) => {
@@ -530,7 +545,6 @@
         const activeItem = document.getElementById('nav-' + view);
         if (activeItem) activeItem.classList.add('active');
         
-        // Auto-close sidebar drawer on mobile after selection
         sidebar.classList.remove('open');
         sidebarOverlay.classList.remove('active');
         
@@ -673,7 +687,10 @@
 
         const localImg = file ? URL.createObjectURL(file) : null;
         appendMessage('user', messageInput.value.trim() || (file ? file.name : ""), localImg);
+        
         chatHistory.push({ role: "user", content: text });
+        // 💾 In LocalStorage sichern
+        localStorage.setItem('kanoai_chat_history', JSON.stringify(chatHistory));
         
         messageInput.value = '';
         clearImage();
@@ -719,28 +736,26 @@
             }
             
             chatHistory.push({ role: "assistant", content: aiReply });
+            // 💾 Nach AI-Antwort Zustand erneut sichern
+            localStorage.setItem('kanoai_chat_history', JSON.stringify(chatHistory));
         } catch (err) {
             thinking.remove();
             console.error("❌ Allgemeiner API Fehler:", err);
-            appendMessage('ai', "Netzwerkfehler oder Server-Timeout. Die Bildgenerierung/Video-KI braucht manchmal etwas länger.");
+            appendMessage('ai', "Netzwerkfehler oder Server-Timeout.");
         }
     }
 
-    // 🔥 TEXT TO IMAGE STUDIO: Submitting and loading bar animation
+    // TEXT TO IMAGE STUDIO
     async function handleT2ISubmit(e) {
         if (e) e.preventDefault();
         const prompt = t2iPromptInput.value.trim();
         if (!prompt) return;
 
-        // Clear input early
         t2iPromptInput.value = '';
-
-        // Show loading screen and initialize bar
         t2iLoader.classList.remove('hidden');
         t2iProgressFill.style.width = '0%';
         t2iStatusText.textContent = "Verbinde mit Übersetzungsdienst...";
 
-        // Simulate step-by-step progress
         let progress = 0;
         const statusSteps = [
             { threshold: 15, text: "Übersetze Prompt in Studio-Englisch..." },
@@ -755,7 +770,6 @@
                 if (progress > 90) progress = 90;
                 t2iProgressFill.style.width = `${progress}%`;
                 
-                // Update text based on milestones
                 const activeStep = statusSteps.find(step => progress <= step.threshold);
                 if (activeStep) {
                     t2iStatusText.textContent = activeStep.text;
@@ -763,7 +777,6 @@
             }
         }, 400);
 
-        // Prep form payload, asking explicitly for an image
         const formData = new FormData();
         formData.append('message', `Generiere ein Bild von: ${prompt}`);
         formData.append("history", JSON.stringify([]));
@@ -777,7 +790,6 @@
             clearInterval(progressInterval);
 
             if (data.generatedImage) {
-                // Complete progress smoothly
                 t2iProgressFill.style.width = '100%';
                 t2iStatusText.textContent = "Fertiggestellt!";
                 
@@ -788,24 +800,23 @@
                     t2iLoader.classList.add('hidden');
                 }, 400);
             } else {
-                alert("Es wurde kein Bild vom Server zurückgeliefert: " + (data.reply || "Unbekannter Fehler"));
+                alert("Es wurde kein Bild vom Server zurückgeliefert.");
                 t2iLoader.classList.add('hidden');
             }
         } catch (err) {
             clearInterval(progressInterval);
             console.error("❌ Studio T2I Fehler:", err);
-            alert("Fehler bei der Studio-Generierung. Bitte prüfe deinen Render-Server.");
+            alert("Fehler bei der Studio-Generierung.");
             t2iLoader.classList.add('hidden');
         }
     }
 
-    // UNIVERSAL MICROPHONE HANDLER (Works for both Chat input and T2I Studio Input)
+    // UNIVERSAL MICROPHONE HANDLER
     async function toggleMicrophoneRecording(btn) {
         currentRecordBtn = btn;
         const inputField = btn === micBtn ? messageInput : t2iPromptInput;
 
         if (!isRecording) {
-            // Start recording
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
@@ -816,9 +827,7 @@
                 };
 
                 mediaRecorder.onstop = async () => {
-                    // Close mic stream
                     stream.getTracks().forEach(track => track.stop());
-
                     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                     
                     inputField.placeholder = "Übersetze Sprache in Text...";
@@ -834,7 +843,6 @@
 
                         if (data.text && data.text.trim()) {
                             inputField.value = data.text;
-                            // Auto-submit based on active view
                             if (currentRecordBtn === micBtn) {
                                 handleChatSubmit();
                             } else {
@@ -853,14 +861,13 @@
 
                 mediaRecorder.start();
                 isRecording = true;
-                currentRecordBtn.style.color = '#ef4444'; // Red recording state indicator
+                currentRecordBtn.style.color = '#ef4444';
                 inputField.placeholder = "🎙️ Ich höre zu... (Erneut drücken zum Stoppen)";
             } catch (err) {
                 console.error("Mikrofonzugriff verweigert:", err);
                 alert("Bitte erlaube den Zugriff auf dein Mikrofon.");
             }
         } else {
-            // Stop recording
             if (mediaRecorder && mediaRecorder.state !== "inactive") {
                 mediaRecorder.stop();
             }
@@ -868,7 +875,6 @@
         }
     }
 
-    // Attach click events to mic buttons
     micBtn.onclick = () => toggleMicrophoneRecording(micBtn);
     t2iMicBtn.onclick = () => toggleMicrophoneRecording(t2iMicBtn);
 
