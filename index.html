@@ -12,8 +12,8 @@
             --bg-color: #0a0a0a;
             --card-bg: #171717;
             --text-main: #e5e5e5;
-            --accent: #ef4444;       /* Von Blau auf ein schönes Rot (Tailwind red-500) geändert */
-            --bubble-user: #dc2626;  /* Das Blau der User-Sprechblase durch Rot (Tailwind red-600) ersetzt */
+            --accent: #ef4444;       /* Kano-Rot */
+            --bubble-user: #dc2626;  /* User-Sprechblase */
             --bubble-ai: #262626;
         }
 
@@ -22,106 +22,109 @@
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
-            height: 100%;
-            width: 100%;
-            position: fixed;
+            height: 100dvh;
+            width: 100vw;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #404040; border-radius: 10px; }
 
-        .app-container {
-            height: 100dvh;
+        /* Modern layout structure with Sidebar */
+        .app-layout {
             display: flex;
-            flex-direction: column;
-            max-width: 800px;
-            margin: 0 auto;
+            height: 100dvh;
+            width: 100vw;
             position: relative;
-            width: 100%;
+            overflow: hidden;
         }
 
-       .top-header {
-            position: fixed; /* Auf fixed ändern, damit er sich am gesamten Bildschirm orientiert */
-            top: 0;
-            left: 0;
-            right: 0;
-            padding: 0.75rem 1rem;
+        /* Sidebar on Desktop, Drawer on Mobile */
+        .sidebar {
+            width: 260px;
+            background-color: #121212;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
             display: flex;
+            flex-direction: column;
+            height: 100%;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        /* View Container */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--bg-color);
+        }
+
+        /* Top Header on Mobile */
+        .mobile-header {
+            display: none;
+            padding: 0.75rem 1rem;
             align-items: center;
             justify-content: space-between;
-            z-index: 100;
             background: rgba(10, 10, 10, 0.8);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            z-index: 90;
         }
 
-        .logo-img {
-            height: 56px;
-            max-width: 240px;
-            object-fit: contain;
-            display: block;
-        }
-        /* Sorgt dafür, dass das Känguru-Logo im Header perfekt skaliert wird */
-       /* Vergrößert das Känguru-Logo, damit es perfekt lesbar ist */
         .logo-fallback {
             font-weight: 800;
-            font-size: 1.35rem; /* Etwas größer, damit es gut lesbar ist */
+            font-size: 1.4rem;
             letter-spacing: -0.02em;
-            background: linear-gradient(90deg, #ff3333, #ff6666); /* Schickes Kano-Rot */
+            background: linear-gradient(90deg, #ff3333, #ff6666);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .nav-dropdown {
-            position: fixed; /* Auch hier auf fixed ändern */
-            top: 3.5rem;
-            left: 1rem;
-            background: #1f1f1f;
-            border: 1px solid #333;
-            border-radius: 0.75rem;
-            display: none;
-            flex-direction: column;
-            min-width: 200px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            overflow: hidden;
-            animation: fadeIn 0.2s ease-out;
-            z-index: 101; /* Ein Tick höher als der Header */
-        }
 
-        .nav-item {
+        .sidebar-item {
             padding: 0.875rem 1rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             gap: 0.75rem;
             color: #d4d4d4;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            border-radius: 0.5rem;
+            margin: 0.25rem 0.75rem;
+            transition: all 0.2s ease;
         }
 
-        .nav-item:hover { background: #2d2d2d; color: white; }
-        .nav-item.active { color: var(--accent); background: rgba(59, 130, 246, 0.1); }
+        .sidebar-item:hover {
+            background: #1f1f1f;
+            color: white;
+        }
+
+        .sidebar-item.active {
+            color: white;
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 3px solid var(--accent);
+        }
 
         #chat-window {
             flex: 1;
             overflow-y: auto;
-            padding: 5rem 1rem 1.5rem 1rem;
+            padding: 1.5rem 1rem;
             display: flex;
             flex-direction: column;
             gap: 1rem;
             scroll-behavior: smooth;
             width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .message {
-            max-width: 88%;
-            padding: 0.65rem 0.9rem;
+            max-width: 85%;
+            padding: 0.75rem 1rem;
             border-radius: 1.15rem;
-            font-size: 0.925rem;
+            font-size: 0.95rem;
             line-height: 1.45;
             position: relative;
             animation: msgSlide 0.25s ease-out;
@@ -146,10 +149,7 @@
             background-color: var(--bubble-ai);
             color: var(--text-main);
             border-bottom-left-radius: 0.2rem;
-            display: block; 
         }
-
-        .welcome-msg { white-space: normal !important; }
 
         .ai-thinking {
             display: flex;
@@ -185,14 +185,15 @@
 
         @keyframes waveAnim {
             0%, 100% { transform: scaleY(1); opacity: 0.4; }
-            50% { transform: scaleY(1.6); opacity: 1; background: #60a5fa; }
+            50% { transform: scaleY(1.6); opacity: 1; background: #f87171; }
         }
 
         .input-area {
-            padding: 0.5rem 1rem 1.25rem 1rem;
+            padding: 0.75rem 1rem 1.5rem 1rem;
             background: var(--bg-color);
-            position: relative;
-            z-index: 50; /* Sorgt dafür, dass das Feld immer im Vordergrund ist */
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .input-wrapper {
@@ -202,11 +203,9 @@
             display: flex;
             align-items: center;
             padding: 0.3rem 0.5rem;
-            position: relative;
-            z-index: 51;
         }
 
-        #message-input {
+        #message-input, #t2i-prompt-input {
             background: transparent;
             border: none;
             color: white;
@@ -215,9 +214,6 @@
             outline: none;
             font-size: 1rem;
             min-width: 0;
-            display: block !important; /* Erzwingt die Anzeige */
-            position: relative;
-            z-index: 52;
         }
 
         .icon-btn {
@@ -249,13 +245,7 @@
 
         #image-preview-container { 
             display: none; 
-            padding: 0.5rem 1rem; 
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            right: 0;
-            background: var(--bg-color);
-            z-index: 10;
+            padding: 0.5rem 0; 
         }
 
         .preview-badge {
@@ -268,94 +258,224 @@
             width: fit-content;
         }
 
-        .view { display: none; height: 100%; overflow: hidden; }
+        .view { display: none; height: 100%; overflow: hidden; width: 100%; }
         .view.active { display: flex; flex-direction: column; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Sliding loading bar styles */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #262626;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
 
-        @media (max-width: 380px) {
-            .message { max-width: 92%; font-size: 0.875rem; }
-            .logo-fallback { font-size: 1.1rem; }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #dc2626, #ef4444);
+            border-radius: 3px;
+            transition: width 0.4s ease;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: absolute;
+                left: 0;
+                top: 0;
+                transform: translateX(-100%);
+                height: 100dvh;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.8);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .mobile-header {
+                display: flex;
+            }
+            .sidebar-overlay {
+                display: none;
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.6);
+                z-index: 95;
+            }
+            .sidebar-overlay.active {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <header class="top-header">
-            <div class="logo-container">
-                <button class="icon-btn" id="menu-toggle-btn" aria-label="Menü">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+
+    <div class="app-layout">
+        <!-- Sidebar overlay for mobile drawer -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Collapsible Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="p-6 border-b border-neutral-900 flex items-center justify-between">
+                <span class="logo-fallback">KanoAI</span>
+                <button class="md:hidden text-gray-400 hover:text-white" id="close-sidebar-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
-                  <div id="logo-wrapper">
-                   <span class="logo-fallback">KanoAI</span>
-               </div>
             </div>
             
-            <div id="nav-dropdown" class="nav-dropdown">
-                <div id="nav-chat" class="nav-item active" onclick="switchView('chat')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                    Chat
+            <nav class="flex-1 py-4">
+                <div id="nav-chat" class="sidebar-item active" onclick="switchView('chat')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    <span>Chat</span>
                 </div>
-                <div id="nav-features" class="nav-item" onclick="switchView('features')">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                    Features & Info
+                <div id="nav-image" class="sidebar-item" onclick="switchView('image')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <span>Text to Image Studio</span>
                 </div>
+                <div id="nav-features" class="sidebar-item" onclick="switchView('features')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Features</span>
+                </div>
+            </nav>
+
+            <div class="p-4 border-t border-neutral-900 text-xs text-neutral-500 text-center">
+                Powered by Groq & SDXL-Turbo
             </div>
-        </header>
+        </aside>
 
-        <div id="chat-view" class="view active">
-            <div class="h-14 w-full flex-shrink-0"></div>
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            
+            <!-- Mobile Top Header -->
+            <header class="mobile-header">
+                <button class="icon-btn text-white" id="menu-toggle-btn" aria-label="Menü">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <span class="logo-fallback">KanoAI</span>
+                <div class="w-10"></div> <!-- Spacer to center the logo -->
+            </header>
 
-            <div id="chat-window">
-                <div class="message message-ai welcome-msg">
-                    Hey! Ich bin <strong>KanoAI</strong>. Starte eine Konversation, indem du Text eingibst, nach einem Bild verlangst, oder mit `/video [Beschreibung]` ein Video generierst.
-                </div>
-            </div>
-
-            <div class="input-area">
-                <div id="image-preview-container">
-                    <div class="preview-badge">
-                        <span id="file-name" class="truncate max-w-[150px]">bild.jpg</span>
-                        <button onclick="clearImage()" class="ml-2 text-red-400">✕</button>
+            <!-- CHAT VIEW -->
+            <div id="chat-view" class="view active">
+                <div id="chat-window">
+                    <div class="message message-ai welcome-msg">
+                        Hey! Ich bin <strong>KanoAI</strong>. Starte eine Konversation, indem du Text eingibst, nach einem Bild verlangst, oder mit `/video [Beschreibung]` ein Video generierst.
                     </div>
                 </div>
 
-                <form id="chat-form" class="input-wrapper" onsubmit="handleChatSubmit(event)">
-                    <input type="file" id="file-input" accept="image/*, .txt, .pdf" hidden onchange="handleFileChange()">
+                <div class="input-area">
+                    <div id="image-preview-container">
+                        <div class="preview-badge">
+                            <span id="file-name" class="truncate max-w-[150px]">bild.jpg</span>
+                            <button onclick="clearImage()" class="ml-2 text-red-400">✕</button>
+                        </div>
+                    </div>
+
+                    <form id="chat-form" class="input-wrapper" onsubmit="handleChatSubmit(event)">
+                        <input type="file" id="file-input" accept="image/*, .txt, .pdf" hidden onchange="handleFileChange()">
+                        
+                        <button type="button" id="upload-btn" class="icon-btn upload-btn-styled" onclick="document.getElementById('file-input').click()" aria-label="Datei hochladen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
+                        </button>
+
+                        <button type="button" id="mic-btn" class="icon-btn" style="color: #a3a3a3; margin-left: 4px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                        </button>
+
+                        <input type="text" id="message-input" placeholder="Nachricht an KanoAI..." autocomplete="off">
+
+                        <button type="submit" id="send-btn" class="icon-btn" style="color: var(--accent)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </button>
+                    </form>
+                </div>
+            </div> 
+
+            <!-- TEXT TO IMAGE VIEW -->
+            <div id="image-view" class="view">
+                <div class="flex-1 overflow-y-auto p-4 flex flex-col items-center justify-center w-full max-w-4xl mx-auto">
                     
-                    <button type="button" id="upload-btn" class="icon-btn upload-btn-styled" onclick="document.getElementById('file-input').click()" aria-label="Datei hochladen">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path></svg>
-                    </button>
+                    <!-- Title Header -->
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold text-white flex items-center justify-center gap-2">
+                            <span class="text-red-500">⚡</span> SDXL-Turbo Studio
+                        </h2>
+                        <p class="text-sm text-neutral-400 mt-1">Generiere hochqualitative Bilder in Echtzeit auf Knopfdruck</p>
+                    </div>
 
-                    <button type="button" id="mic-btn" class="icon-btn" style="color: #a3a3a3; margin-left: 4px;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
-                    </button>
+                    <!-- Main Canvas Preview Area -->
+                    <div class="w-full aspect-square max-w-[500px] bg-neutral-900 border border-neutral-800 rounded-2xl flex flex-col items-center justify-center overflow-hidden relative shadow-2xl mb-6">
+                        <!-- Default Placeholder SVG -->
+                        <div id="t2i-placeholder" class="flex flex-col items-center justify-center p-8 text-center text-neutral-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mb-4 text-neutral-600 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                            <p class="font-medium text-neutral-400">Kein Bild generiert</p>
+                            <p class="text-xs text-neutral-600 mt-1 max-w-[280px]">Gib unten einen Prompt ein und klicke auf Generieren, um zu starten.</p>
+                        </div>
 
-                    <input type="text" id="message-input" placeholder="Nachricht an KanoAI..." autocomplete="off">
+                        <!-- Generated Image (Hidden initially) -->
+                        <img id="t2i-output-img" class="hidden w-full h-full object-cover transition-opacity duration-300" src="" alt="Generiertes Bild">
 
-                    <button type="submit" id="send-btn" class="icon-btn" style="color: var(--accent)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                    </button>
-                </form>
+                        <!-- Loader overlay (Hidden initially) -->
+                        <div id="t2i-loader" class="hidden absolute inset-0 bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center">
+                            <div class="w-12 h-12 border-4 border-red-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                            <p id="t2i-status-text" class="text-sm font-medium text-white mb-4">Initialisiere Bildgenerierung...</p>
+                            
+                            <!-- Dynamic Progress Bar -->
+                            <div class="w-64">
+                                <div class="progress-bar-container">
+                                    <div id="t2i-progress-fill" class="progress-bar-fill"></div>
+                                </div>
+                                <div class="flex justify-between text-[10px] text-neutral-500 mt-1">
+                                    <span>0%</span>
+                                    <span>RENDERING</span>
+                                    <span>100%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image Generation Controller -->
+                    <div class="w-full max-w-[500px]">
+                        <form id="t2i-form" class="input-wrapper" onsubmit="handleT2ISubmit(event)">
+                            <button type="button" id="t2i-mic-btn" class="icon-btn text-neutral-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                            </button>
+                            
+                            <input type="text" id="t2i-prompt-input" placeholder="Beschreibe dein Bild (z.B. Ein rotes Auto im Weltall)..." autocomplete="off">
+                            
+                            <button type="submit" id="t2i-generate-btn" class="icon-btn text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
             </div>
-        </div> 
-        <div id="features-view" class="view p-6 pt-24 overflow-y-auto">
-            <h1 class="text-2xl font-bold mb-4">EduAI Features</h1>
-            <div class="space-y-4">
-                <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
-                    <h3 class="text-blue-400 font-bold">🚀 Hausaufgaben-Hilfe</h3>
-                    <p class="text-sm text-gray-400 mt-1">Lade Fotos von Aufgaben hoch oder beschreibe sie einfach.</p>
-                </div>
-                <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
-                    <h3 class="text-blue-400 font-bold">📚 Lernpläne</h3>
-                    <p class="text-sm text-gray-400 mt-1">Lass dir individuelle Pläne für Prüfungen erstellen.</p>
-                </div>
-                <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
-                    <h3 class="text-blue-400 font-bold">🎬 Video-Generierung</h3>
-                    <p class="text-sm text-gray-400 mt-1">Nutze `/video [beschreibung]` um kurze, cinematische Clips per Alibaba-KI erzeugen zu lassen.</p>
+
+            <!-- FEATURES VIEW -->
+            <div id="features-view" class="view p-6 pt-16 md:pt-6 overflow-y-auto">
+                <div class="max-w-2xl mx-auto">
+                    <h1 class="text-2xl font-bold mb-4">KanoAI Features</h1>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
+                            <h3 class="text-red-400 font-bold">Hilfe bei Alltäglichen Aufgaben</h3>
+                            <p class="text-sm text-gray-400 mt-1">Frage einfach nach Hilfe</p>
+                        </div>
+                        <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
+                            <h3 class="text-red-400 font-bold">Bilder Generierung</h3>
+                            <p class="text-sm text-gray-400 mt-1">Ultimativ für immer. 
+                                Nutze Das neue Studio um Bilder zu generieren</p>
+                        </div>
+                        <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
+                            <h3 class="text-red-400 font-bold">🎨 Bild-Generierung</h3>
+                            <p class="text-sm text-gray-400 mt-1">Nutze den neuen "Text to Image Studio" Tab, um in Sekundenschnelle atemberaubende Bilder mit SDXL-Turbo zu rendern.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
 <script>
@@ -363,44 +483,67 @@
     const messageInput = document.getElementById('message-input');
     const fileInput = document.getElementById('file-input');
     const previewContainer = document.getElementById('image-preview-container');
-    const navDropdown = document.getElementById('nav-dropdown');
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+    const menuToggleBtn = document.getElementById('menu-toggle-btn');
     
-    // 🔥 NEU: Variablen für die Audio-Aufnahme
+    // T2I view components
+    const t2iForm = document.getElementById('t2i-form');
+    const t2iPromptInput = document.getElementById('t2i-prompt-input');
+    const t2iOutputImg = document.getElementById('t2i-output-img');
+    const t2iPlaceholder = document.getElementById('t2i-placeholder');
+    const t2iLoader = document.getElementById('t2i-loader');
+    const t2iProgressFill = document.getElementById('t2i-progress-fill');
+    const t2iStatusText = document.getElementById('t2i-status-text');
+    const t2iMicBtn = document.getElementById('t2i-mic-btn');
+
+    // Microphone audio recording state
     const micBtn = document.getElementById('mic-btn');
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
+    let currentRecordBtn = null; // Tracks which microphone button initiated recording
     
     let chatHistory = [];
     const API_URL = 'https://eduai-5b85.onrender.com/chat';
-    const TRANSCRIBE_URL = 'https://eduai-5b85.onrender.com/transcribe'; // Transkriptions-Endpunkt
+    const TRANSCRIBE_URL = 'https://eduai-5b85.onrender.com/transcribe';
 
-    function handleLogoError() {
-        const wrapper = document.getElementById('logo-wrapper');
-        wrapper.innerHTML = '<span class="logo-fallback">eduai</span>';
-    }
-
-    document.getElementById('menu-toggle-btn').onclick = (e) => {
+    // Sidebar Toggling on Mobile
+    menuToggleBtn.onclick = (e) => {
         e.stopPropagation();
-        navDropdown.style.display = navDropdown.style.display === 'flex' ? 'none' : 'flex';
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('active');
     };
 
-    document.addEventListener('click', () => {
-        if (navDropdown) navDropdown.style.display = 'none';
-    });
+    closeSidebarBtn.onclick = () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    };
+
+    sidebarOverlay.onclick = () => {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    };
 
     function switchView(view) {
         document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
         
         document.getElementById(view + '-view').classList.add('active');
-        const navItem = document.getElementById('nav-' + view);
-        if (navItem) navItem.classList.add('active');
+        const activeItem = document.getElementById('nav-' + view);
+        if (activeItem) activeItem.classList.add('active');
         
-        navDropdown.style.display = 'none';
-        if (view === 'chat') chatWindow.scrollTop = chatWindow.scrollHeight;
+        // Auto-close sidebar drawer on mobile after selection
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+        
+        if (view === 'chat') {
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
     }
 
+    // Text formatting for equations and code blocks
     function formatText(text) {
         if (!text) return "";
 
@@ -429,6 +572,7 @@
 
         html = html.replace(/```([\s\S]*?)```/g, '<pre class="bg-[#1a1a1a] p-3 rounded-lg my-2 font-mono text-sm overflow-x-auto border border-[#333]">$1</pre>');
         html = html.replace(/`([^`]+)`/g, '<code class="bg-[#1a1a1a] px-1.5 py-0.5 rounded font-mono text-sm text-blue-400">$1</code>');
+        html = html.replace(/\*\*(.*?)\*\"/g, '<strong>$1</strong>');
         html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         html = html.replace(/^(?:\*|-)\s+(.+)$/gm, '<li class="list-disc ml-5">$1</li>');
         html = html.replace(/^(\d+)\.\s+(.+)$/gm, '<li class="list-decimal ml-5">$2</li>');
@@ -437,7 +581,7 @@
         return html;
     }
 
-   function handleFileChange() {
+    function handleFileChange() {
         const file = fileInput.files[0];
         if (file) {
             document.getElementById('file-name').textContent = file.name;
@@ -462,66 +606,66 @@
         previewContainer.style.display = 'none';
     }
 
-   function appendMessage(role, text, imgUrl = null, videoUrl = null) {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `message message-${role} flex flex-col relative group`;
-    
-    if (imgUrl) {
-        const img = document.createElement('img');
-        img.src = imgUrl;
-        img.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333]';
-        msgDiv.appendChild(img);
-    }
-
-    if (videoUrl) {
-        const video = document.createElement('video');
-        video.src = videoUrl;
-        video.controls = true;
-        video.playsInline = true;
-        video.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333] bg-black';
-        msgDiv.appendChild(video);
-    }
-    
-    if (text) {
-        const content = document.createElement('div');
-        content.innerHTML = role === 'ai' ? formatText(text) : text;
-        msgDiv.appendChild(content);
-
-        if (role === 'ai') {
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn mt-2 text-xs text-gray-400 hover:text-white flex items-center gap-1 self-end transition-colors';
-            copyBtn.title = 'Text kopieren';
-            copyBtn.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                </svg>
-                <span>Kopieren</span>
-            `;
-
-            copyBtn.onclick = async () => {
-                try {
-                    await navigator.clipboard.writeText(content.innerText);
-                    copyBtn.querySelector('span').textContent = 'Kopiert!';
-                    copyBtn.classList.add('text-green-400');
-                    
-                    setTimeout(() => {
-                        copyBtn.querySelector('span').textContent = 'Kopieren';
-                        copyBtn.classList.remove('text-green-400');
-                    }, 2000);
-                } catch (err) {
-                    console.error('Fehler beim Kopieren:', err);
-                }
-            };
-            
-            msgDiv.appendChild(copyBtn);
+    function appendMessage(role, text, imgUrl = null, videoUrl = null) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message message-${role} flex flex-col relative group`;
+        
+        if (imgUrl) {
+            const img = document.createElement('img');
+            img.src = imgUrl;
+            img.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333]';
+            msgDiv.appendChild(img);
         }
-    }
-    
-    chatWindow.appendChild(msgDiv);
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-}
 
-async function handleChatSubmit(e) {
+        if (videoUrl) {
+            const video = document.createElement('video');
+            video.src = videoUrl;
+            video.controls = true;
+            video.playsInline = true;
+            video.className = 'rounded-lg mb-2 max-w-full h-auto border border-[#333] bg-black';
+            msgDiv.appendChild(video);
+        }
+        
+        if (text) {
+            const content = document.createElement('div');
+            content.innerHTML = role === 'ai' ? formatText(text) : text;
+            msgDiv.appendChild(content);
+
+            if (role === 'ai') {
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn mt-2 text-xs text-gray-400 hover:text-white flex items-center gap-1 self-end transition-colors';
+                copyBtn.title = 'Text kopieren';
+                copyBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    <span>Kopieren</span>
+                `;
+
+                copyBtn.onclick = async () => {
+                    try {
+                        await navigator.clipboard.writeText(content.innerText);
+                        copyBtn.querySelector('span').textContent = 'Kopiert!';
+                        copyBtn.classList.add('text-green-400');
+                        
+                        setTimeout(() => {
+                            copyBtn.querySelector('span').textContent = 'Kopieren';
+                            copyBtn.classList.remove('text-green-400');
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Fehler beim Kopieren:', err);
+                    }
+                };
+                
+                msgDiv.appendChild(copyBtn);
+            }
+        }
+        
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    async function handleChatSubmit(e) {
         if (e) e.preventDefault();
         let text = messageInput.value.trim();
         const file = fileInput.files[0];
@@ -582,14 +726,90 @@ async function handleChatSubmit(e) {
         } catch (err) {
             thinking.remove();
             console.error("❌ Allgemeiner API Fehler:", err);
-            appendMessage('ai', "Netzwerkfehler oder Server-Timeout. Die Video-KI braucht manchmal etwas länger.");
+            appendMessage('ai', "Netzwerkfehler oder Server-Timeout. Die Bildgenerierung/Video-KI braucht manchmal etwas länger.");
         }
     }
 
-    // 🔥 NEU: Audioaufnahme-Logik für das Mikrofon
-    micBtn.onclick = async () => {
+    // 🔥 TEXT TO IMAGE STUDIO: Submitting and loading bar animation
+    async function handleT2ISubmit(e) {
+        if (e) e.preventDefault();
+        const prompt = t2iPromptInput.value.trim();
+        if (!prompt) return;
+
+        // Clear input early
+        t2iPromptInput.value = '';
+
+        // Show loading screen and initialize bar
+        t2iLoader.classList.remove('hidden');
+        t2iProgressFill.style.width = '0%';
+        t2iStatusText.textContent = "Verbinde mit Übersetzungsdienst...";
+
+        // Simulate step-by-step progress
+        let progress = 0;
+        const statusSteps = [
+            { threshold: 15, text: "Übersetze Prompt in Studio-Englisch..." },
+            { threshold: 45, text: "Kontaktiere SDXL-Turbo über HF-Server..." },
+            { threshold: 75, text: "Rendere Bild (Schritt 1/1 auf CPU)..." },
+            { threshold: 90, text: "Konvertiere Bilddaten..." }
+        ];
+
+        const progressInterval = setInterval(() => {
+            if (progress < 90) {
+                progress += Math.random() * 8;
+                if (progress > 90) progress = 90;
+                t2iProgressFill.style.width = `${progress}%`;
+                
+                // Update text based on milestones
+                const activeStep = statusSteps.find(step => progress <= step.threshold);
+                if (activeStep) {
+                    t2iStatusText.textContent = activeStep.text;
+                }
+            }
+        }, 400);
+
+        // Prep form payload, asking explicitly for an image
+        const formData = new FormData();
+        formData.append('message', `Generiere ein Bild von: ${prompt}`);
+        formData.append("history", JSON.stringify([]));
+        formData.append("mode", "flash");
+
+        try {
+            console.log("🎨 Sende T2I Studio-Anfrage an Backend...");
+            const res = await fetch(API_URL, { method: 'POST', body: formData });
+            const data = await res.json();
+            
+            clearInterval(progressInterval);
+
+            if (data.generatedImage) {
+                // Complete progress smoothly
+                t2iProgressFill.style.width = '100%';
+                t2iStatusText.textContent = "Fertiggestellt!";
+                
+                setTimeout(() => {
+                    t2iOutputImg.src = data.generatedImage;
+                    t2iOutputImg.classList.remove('hidden');
+                    t2iPlaceholder.classList.add('hidden');
+                    t2iLoader.classList.add('hidden');
+                }, 400);
+            } else {
+                alert("Es wurde kein Bild vom Server zurückgeliefert: " + (data.reply || "Unbekannter Fehler"));
+                t2iLoader.classList.add('hidden');
+            }
+        } catch (err) {
+            clearInterval(progressInterval);
+            console.error("❌ Studio T2I Fehler:", err);
+            alert("Fehler bei der Studio-Generierung. Bitte prüfe deinen Render-Server.");
+            t2iLoader.classList.add('hidden');
+        }
+    }
+
+    // UNIVERSAL MICROPHONE HANDLER (Works for both Chat input and T2I Studio Input)
+    async function toggleMicrophoneRecording(btn) {
+        currentRecordBtn = btn;
+        const inputField = btn === micBtn ? messageInput : t2iPromptInput;
+
         if (!isRecording) {
-            // Aufnahme starten
+            // Start recording
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
@@ -600,54 +820,61 @@ async function handleChatSubmit(e) {
                 };
 
                 mediaRecorder.onstop = async () => {
-                    // Mikrofon-Stream beenden, damit das Browsersymbol verschwindet
+                    // Close mic stream
                     stream.getTracks().forEach(track => track.stop());
 
                     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
                     
-                    // Visuellen Ladezustand im Input anzeigen
-                    messageInput.placeholder = "Übersetze Sprache in Text...";
-                    micBtn.style.color = '#a3a3a3';
+                    inputField.placeholder = "Übersetze Sprache in Text...";
+                    currentRecordBtn.style.color = '#a3a3a3';
 
                     const audioFormData = new FormData();
                     audioFormData.append('audio', audioBlob, 'voice.wav');
 
                     try {
-                        console.log("🎙️ Sende Audiodatei zur Transkription...");
+                        console.log("🎙️ Sende Sprachaufnahme zur Transkription...");
                         const response = await fetch(TRANSCRIBE_URL, { method: 'POST', body: audioFormData });
                         const data = await response.json();
 
                         if (data.text && data.text.trim()) {
-                            messageInput.value = data.text;
-                            // Automatisches Absenden des erkannten Textes
-                            handleChatSubmit();
+                            inputField.value = data.text;
+                            // Auto-submit based on active view
+                            if (currentRecordBtn === micBtn) {
+                                handleChatSubmit();
+                            } else {
+                                handleT2ISubmit();
+                            }
                         } else {
                             alert("Es konnte keine Sprache erkannt werden.");
                         }
                     } catch (err) {
-                        console.error("❌ Fehler beim Senden des Audios:", err);
-                        alert("Verbindung zum Sprachserver fehlgeschlagen.");
+                        console.error("❌ Fehler bei Spracherkennung:", err);
+                        alert("Verbindung zum Transkriptionsserver fehlgeschlagen.");
                     } finally {
-                        messageInput.placeholder = "Nachricht an KanoAI...";
+                        inputField.placeholder = currentRecordBtn === micBtn ? "Nachricht an KanoAI..." : "Beschreibe dein Bild...";
                     }
                 };
 
                 mediaRecorder.start();
                 isRecording = true;
-                micBtn.style.color = '#ef4444'; // Ändert die Buttonfarbe auf Kano-Rot während der Aufnahme
-                messageInput.placeholder = "🎙️ Ich höre zu... (Erneut drücken zum Stoppen)";
+                currentRecordBtn.style.color = '#ef4444'; // Red recording state indicator
+                inputField.placeholder = "🎙️ Ich höre zu... (Erneut drücken zum Stoppen)";
             } catch (err) {
                 console.error("Mikrofonzugriff verweigert:", err);
                 alert("Bitte erlaube den Zugriff auf dein Mikrofon.");
             }
         } else {
-            // Aufnahme stoppen
+            // Stop recording
             if (mediaRecorder && mediaRecorder.state !== "inactive") {
                 mediaRecorder.stop();
             }
             isRecording = false;
         }
-    };
+    }
+
+    // Attach click events to mic buttons
+    micBtn.onclick = () => toggleMicrophoneRecording(micBtn);
+    t2iMicBtn.onclick = () => toggleMicrophoneRecording(t2iMicBtn);
 
     window.addEventListener('resize', () => {
         if (document.activeElement.tagName === 'INPUT') {
@@ -656,5 +883,6 @@ async function handleChatSubmit(e) {
             }, 50);
         }
     });
-</script></body>
+</script>
+</body>
 </html>
