@@ -7,6 +7,12 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script type="module">
+    import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0-alpha.0/dist/transformers.min.js';
+    // Wir machen die Pipeline global verfügbar, damit wir sie in unseren Funktionen nutzen können
+    window.pipeline = pipeline;
+    window.env = env;
+    </script>
     <style>
         :root {
             --bg-color: #04050a;
