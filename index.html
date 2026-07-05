@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KanoAI - Future Learning</title>
+    <title>Helix AI - Future Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -12,13 +12,13 @@
             --bg-color: #0a0a0a;
             --card-bg: #171717;
             --text-main: #e5e5e5;
-            --accent: #ef4444;       /* Kano-Rot */
-            --bubble-user: #dc2626;  /* User-Sprechblase */
+            --accent: #ff8a00;       /* Kano-Rot */
+            --bubble-user: #ff6a00;  /* User-Sprechblase */
             --bubble-ai: #262626;
         }
 
         body {
-            background-color: var(--bg-color);
+            background: radial-gradient(circle at top,#111827,#08090b 60%,#050505);
             color: var(--text-main);
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             overflow: hidden;
@@ -59,7 +59,7 @@
             height: 100%;
             position: relative;
             overflow: hidden;
-            background-color: var(--bg-color);
+            background: radial-gradient(circle at top,#111827,#08090b 60%,#050505);
         }
 
         /* Top Header on Mobile */
@@ -78,7 +78,7 @@
             font-weight: 800;
             font-size: 1.4rem;
             letter-spacing: -0.02em;
-            background: linear-gradient(90deg, #ff3333, #ff6666);
+            background: linear-gradient(90deg, #ffb347, #ff8a00);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -197,7 +197,7 @@
         }
 
         .input-wrapper {
-            background-color: var(--card-bg);
+            background: rgba(18,22,28,.82);backdrop-filter:blur(20px);
             border: 1px solid #262626;
             border-radius: 1.75rem;
             display: flex;
@@ -274,7 +274,7 @@
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #dc2626, #ef4444);
+            background: linear-gradient(90deg, #ff6a00, #ff8a00);
             border-radius: 3px;
             transition: width 0.4s ease;
         }
@@ -317,7 +317,7 @@
         <!-- Collapsible Sidebar -->
         <aside class="sidebar" id="sidebar">
             <div class="p-6 border-b border-neutral-900 flex items-center justify-between">
-                <span class="logo-fallback">KanoAI</span>
+                <span class="logo-fallback">Helix AI</span>
                 <button class="md:hidden text-gray-400 hover:text-white" id="close-sidebar-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                 </button>
@@ -339,7 +339,7 @@
             </nav>
 
             <div class="p-4 border-t border-neutral-900 text-xs text-neutral-500 text-center">
-                Powered by Groq & SDXL-Turbo
+                Powered by Helix AI • Groq • SDXL-Turbo
             </div>
         </aside>
 
@@ -351,7 +351,7 @@
                 <button class="icon-btn text-white" id="menu-toggle-btn" aria-label="Menü">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
                 </button>
-                <span class="logo-fallback">KanoAI</span>
+                <span class="logo-fallback">Helix AI</span>
                 <div class="w-10"></div> <!-- Spacer to center the logo -->
             </header>
 
@@ -359,7 +359,7 @@
             <div id="chat-view" class="view active">
                 <div id="chat-window">
                     <div class="message message-ai welcome-msg">
-                        Hey! Ich bin <strong>KanoAI</strong>. Starte eine Konversation, indem du Text eingibst, nach einem Bild verlangst, oder mit `/video [Beschreibung]` ein Video generierst.
+                        Hey! Ich bin <strong>Helix AI</strong>. Starte eine Konversation, indem du Text eingibst, nach einem Bild verlangst, oder mit `/video [Beschreibung]` ein Video generierst.
                     </div>
                 </div>
 
@@ -382,7 +382,7 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v1a7 7 0 0 1-14 0v-1"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
                         </button>
 
-                        <input type="text" id="message-input" placeholder="Nachricht an KanoAI..." autocomplete="off">
+                        <input type="text" id="message-input" placeholder="Nachricht an Helix AI..." autocomplete="off">
 
                         <button type="submit" id="send-btn" class="icon-btn" style="color: var(--accent)">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -457,7 +457,7 @@
             <!-- FEATURES VIEW -->
             <div id="features-view" class="view p-6 pt-16 md:pt-6 overflow-y-auto">
                 <div class="max-w-2xl mx-auto">
-                    <h1 class="text-2xl font-bold mb-4">KanoAI Features</h1>
+                    <h1 class="text-2xl font-bold mb-4">Helix AI Features</h1>
                     <div class="space-y-4">
                         <div class="p-4 bg-[#171717] rounded-xl border border-[#262626]">
                             <h3 class="text-red-400 font-bold">Hilfe bei Alltäglichen Aufgaben</h3>
@@ -855,13 +855,13 @@
                         console.error("❌ Fehler bei Spracherkennung:", err);
                         alert("Verbindung zum Transkriptionsserver fehlgeschlagen.");
                     } finally {
-                        inputField.placeholder = currentRecordBtn === micBtn ? "Nachricht an KanoAI..." : "Beschreibe dein Bild...";
+                        inputField.placeholder = currentRecordBtn === micBtn ? "Nachricht an Helix AI..." : "Beschreibe dein Bild...";
                     }
                 };
 
                 mediaRecorder.start();
                 isRecording = true;
-                currentRecordBtn.style.color = '#ef4444';
+                currentRecordBtn.style.color = '#ff8a00';
                 inputField.placeholder = "🎙️ Ich höre zu... (Erneut drücken zum Stoppen)";
             } catch (err) {
                 console.error("Mikrofonzugriff verweigert:", err);
